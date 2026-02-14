@@ -8,12 +8,14 @@ import {
   DocumentTextIcon, 
   ClockIcon, 
   ChartBarIcon,
-  MagnifyingGlassIcon 
+  MagnifyingGlassIcon,
+  ExclamationTriangleIcon
 } from "@heroicons/react/24/outline";
 import { useState } from "react";
 
 const navigation = [
   { name: "Dashboard", href: "/", icon: HomeIcon },
+  { name: "Problems", href: "/problems", icon: ExclamationTriangleIcon },
   { name: "Skills", href: "/skills", icon: CubeIcon },
   { name: "Context", href: "/context", icon: DocumentTextIcon },
   { name: "Cron Jobs", href: "/cron", icon: ClockIcon },

@@ -59,7 +59,7 @@ export default function DashboardPage() {
 
   useEffect(() => {
     fetchData();
-    const interval = setInterval(fetchData, 5000); // Refresh every 5 seconds
+    const interval = setInterval(fetchData, 5000);
     return () => clearInterval(interval);
   }, []);
 
@@ -98,9 +98,9 @@ export default function DashboardPage() {
         <div className="max-w-7xl mx-auto px-4 sm:px-6 lg:px-8 py-4">
           <div className="flex items-center justify-between">
             <div>
-              <h1 className="text-2xl font-bold text-gray-900">Mission Control</h1>
+              <h1 className="text-2xl font-bold text-gray-900">Dashboard</h1>
               <p className="text-sm text-gray-500 mt-1">
-                Agent Status & Cost Tracking Dashboard
+                Real-time agent status and cost tracking
               </p>
             </div>
             {lastUpdate && (
@@ -138,15 +138,6 @@ export default function DashboardPage() {
           </section>
         </div>
       </main>
-
-      {/* Footer */}
-      <footer className="bg-white border-t border-gray-200 mt-12">
-        <div className="max-w-7xl mx-auto px-4 sm:px-6 lg:px-8 py-6">
-          <p className="text-center text-sm text-gray-500">
-            Mission Control Phase 1 • Auto-refreshes every 5 seconds
-          </p>
-        </div>
-      </footer>
     </div>
   );
 }

@@ -7,7 +7,10 @@ import {
   XCircleIcon,
   ExclamationCircleIcon,
   ChevronDownIcon,
-  ChevronUpIcon
+  ChevronUpIcon,
+  PencilIcon,
+  CheckIcon,
+  XMarkIcon
 } from "@heroicons/react/24/outline";
 
 interface Skill {
@@ -26,6 +29,10 @@ interface SkillsRegistryProps {
 export function SkillsRegistry({ skills }: SkillsRegistryProps) {
   const [searchQuery, setSearchQuery] = useState("");
   const [expandedSkill, setExpandedSkill] = useState<string | null>(null);
+  const [editingSkill, setEditingSkill] = useState<string | null>(null);
+  const [editedContent, setEditedContent] = useState("");
+  const [lastModified, setLastModified] = useState<Record<string, string>>({});
+  const [saveStatus, setSaveStatus] = useState<Record<string, string>>({});
 
   const filteredSkills = skills.filter(
     (skill) =>
@@ -57,6 +64,50 @@ export function SkillsRegistry({ skills }: SkillsRegistryProps) {
         {status}
       </span>
     );
+  };
+  
+  const handleEditSkill = async (skillName: string, content: string) => {
+    setEditingSkill(skillName);
+    setEditedContent(content);
+  };
+  
+  const handleSaveSkill = async (skillName: string) => {
+    setSaveStatus({ ...saveStatus, [skillName]: "saving" });
+    
+    try {
+      const res = await fetch(`/api/skills/${skillName}`, {
+        method: "POST",
+        headers: { "Content-Type": "application/json" },
+        body: JSON.stringify({ content: editedContent })
+      });
+      
+      if (res.ok) {
+        const data = await res.json();
+        setLastModified({ ...lastModified, [skillName]: data.lastModified });
+        setSaveStatus({ ...saveStatus, [skillName]: "saved" });
+        setEditingSkill(null);
+        
+        // Update the skill content in the local state
+        const skill = skills.find(s => s.name === skillName);
+        if (skill) {
+          skill.content = editedContent;
+        }
+        
+        setTimeout(() => {
+          setSaveStatus({ ...saveStatus, [skillName]: "" });
+        }, 3000);
+      } else {
+        setSaveStatus({ ...saveStatus, [skillName]: "error" });
+      }
+    } catch (error) {
+      console.error("Failed to save skill:", error);
+      setSaveStatus({ ...saveStatus, [skillName]: "error" });
+    }
+  };
+  
+  const handleCancelEdit = (skillName: string) => {
+    setEditingSkill(null);
+    setEditedContent("");
   };
 
   return (
@@ -96,9 +147,22 @@ export function SkillsRegistry({ skills }: SkillsRegistryProps) {
                     <div className="flex items-center gap-2 mb-1">
                       <h3 className="font-semibold text-gray-900">{skill.name}</h3>
                       {getStatusBadge(skill.status)}
+                      
+                      {saveStatus[skill.name] === "saved" && (
+                        <span className="text-xs text-green-600">✓ Saved</span>
+                      )}
+                      {saveStatus[skill.name] === "error" && (
+                        <span className="text-xs text-red-600">✗ Error</span>
+                      )}
                     </div>
                     <p className="text-sm text-gray-600 mb-2">{skill.description}</p>
                     <div className="text-xs text-gray-500 font-mono">{skill.path}</div>
+                    
+                    {lastModified[skill.name] && (
+                      <div className="text-xs text-gray-400 mt-1">
+                        Last modified: {new Date(lastModified[skill.name]).toLocaleString()}
+                      </div>
+                    )}
                     
                     {skill.dependencies && skill.dependencies.length > 0 && (
                       <div className="mt-2">
@@ -118,26 +182,68 @@ export function SkillsRegistry({ skills }: SkillsRegistryProps) {
                   </div>
                 </div>
 
-                {skill.content && (
-                  <button
-                    onClick={() => setExpandedSkill(expandedSkill === skill.path ? null : skill.path)}
-                    className="text-gray-400 hover:text-gray-600 transition-colors"
-                  >
-                    {expandedSkill === skill.path ? (
-                      <ChevronUpIcon className="h-5 w-5" />
-                    ) : (
-                      <ChevronDownIcon className="h-5 w-5" />
-                    )}
-                  </button>
-                )}
+                <div className="flex items-center gap-2">
+                  {skill.content && editingSkill !== skill.name && (
+                    <button
+                      onClick={() => handleEditSkill(skill.name, skill.content!)}
+                      className="text-blue-600 hover:text-blue-700 transition-colors"
+                      title="Edit skill"
+                    >
+                      <PencilIcon className="h-5 w-5" />
+                    </button>
+                  )}
+                  
+                  {skill.content && (
+                    <button
+                      onClick={() => setExpandedSkill(expandedSkill === skill.path ? null : skill.path)}
+                      className="text-gray-400 hover:text-gray-600 transition-colors"
+                    >
+                      {expandedSkill === skill.path ? (
+                        <ChevronUpIcon className="h-5 w-5" />
+                      ) : (
+                        <ChevronDownIcon className="h-5 w-5" />
+                      )}
+                    </button>
+                  )}
+                </div>
               </div>
 
               {/* Expanded Content */}
               {expandedSkill === skill.path && skill.content && (
                 <div className="mt-4 pt-4 border-t border-gray-200">
-                  <pre className="text-xs bg-gray-50 p-4 rounded-lg overflow-x-auto whitespace-pre-wrap">
-                    {skill.content}
-                  </pre>
+                  {editingSkill === skill.name ? (
+                    <div>
+                      <div className="flex justify-between items-center mb-2">
+                        <span className="text-sm font-medium text-gray-700">Editing {skill.name}</span>
+                        <div className="flex gap-2">
+                          <button
+                            onClick={() => handleSaveSkill(skill.name)}
+                            disabled={saveStatus[skill.name] === "saving"}
+                            className="flex items-center gap-1 px-3 py-1 text-sm bg-green-600 text-white rounded hover:bg-green-700 disabled:opacity-50"
+                          >
+                            <CheckIcon className="w-4 h-4" />
+                            {saveStatus[skill.name] === "saving" ? "Saving..." : "Save"}
+                          </button>
+                          <button
+                            onClick={() => handleCancelEdit(skill.name)}
+                            className="flex items-center gap-1 px-3 py-1 text-sm bg-gray-600 text-white rounded hover:bg-gray-700"
+                          >
+                            <XMarkIcon className="w-4 h-4" />
+                            Cancel
+                          </button>
+                        </div>
+                      </div>
+                      <textarea
+                        value={editedContent}
+                        onChange={(e) => setEditedContent(e.target.value)}
+                        className="w-full h-96 p-4 text-xs font-mono bg-gray-50 border border-gray-300 rounded-lg focus:outline-none focus:ring-2 focus:ring-blue-500"
+                      />
+                    </div>
+                  ) : (
+                    <pre className="text-xs bg-gray-50 p-4 rounded-lg overflow-x-auto whitespace-pre-wrap">
+                      {skill.content}
+                    </pre>
+                  )}
                 </div>
               )}
             </div>

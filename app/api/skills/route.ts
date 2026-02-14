@@ -1,14 +1,16 @@
 import { NextResponse } from "next/server";
-import { readdir, readFile } from "fs/promises";
+import { readdir, readFile, stat } from "fs/promises";
 import { join } from "path";
 
 interface Skill {
+  id: string;
   name: string;
   description: string;
   path: string;
   dependencies?: string[];
   status: "installed" | "missing" | "error";
   content?: string;
+  lastModified?: string;
 }
 
 export async function GET() {
@@ -26,6 +28,7 @@ export async function GET() {
       
       try {
         const content = await readFile(skillMdPath, "utf-8");
+        const stats = await stat(skillMdPath);
         
         // Parse SKILL.md for metadata
         const nameMatch = content.match(/^#\s+(.+)$/m);
@@ -45,15 +48,18 @@ export async function GET() {
         }
 
         skills.push({
+          id: entry.name,
           name: nameMatch ? nameMatch[1] : entry.name,
           description: descMatch ? descMatch[1] : "No description available",
           path: skillPath,
           dependencies,
           status: "installed",
-          content
+          content,
+          lastModified: stats.mtime.toISOString()
         });
       } catch (error) {
         skills.push({
+          id: entry.name,
           name: entry.name,
           description: "Error reading SKILL.md",
           path: skillPath,

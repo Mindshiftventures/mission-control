@@ -110,7 +110,8 @@ export function CostAnalytics({ dailyCosts, agentCosts, summary }: CostAnalytics
               label={{ value: 'Cost ($)', angle: -90, position: 'insideLeft' }}
             />
             <Tooltip 
-              formatter={(value: number, name: string) => {
+              formatter={(value: any, name: any) => {
+                if (!value) return ['$0', name || ''];
                 if (name === 'cost') return [`$${value.toFixed(4)}`, 'Cost'];
                 if (name === 'tokens') return [`${value}K`, 'Tokens'];
                 return [value, name];
@@ -144,7 +145,7 @@ export function CostAnalytics({ dailyCosts, agentCosts, summary }: CostAnalytics
                   cx="50%"
                   cy="50%"
                   labelLine={false}
-                  label={({ name, percent }) => `${name}: ${(percent * 100).toFixed(0)}%`}
+                  label={({ name, percent }: any) => `${name}: ${((percent || 0) * 100).toFixed(0)}%`}
                   outerRadius={80}
                   fill="#8884d8"
                   dataKey="value"
@@ -153,7 +154,7 @@ export function CostAnalytics({ dailyCosts, agentCosts, summary }: CostAnalytics
                     <Cell key={`cell-${index}`} fill={COLORS[index % COLORS.length]} />
                   ))}
                 </Pie>
-                <Tooltip formatter={(value: number) => `$${value.toFixed(4)}`} />
+                <Tooltip formatter={(value: any): any => value ? `$${value.toFixed(4)}` : '$0'} />
               </PieChart>
             </ResponsiveContainer>
           </div>

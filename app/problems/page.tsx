@@ -54,24 +54,85 @@ export default function ProblemsPage() {
 
   if (loading) {
     return (
-      <div className="min-h-screen bg-gray-50 flex items-center justify-center">
-        <div className="text-center">
-          <div className="inline-block animate-spin rounded-full h-12 w-12 border-b-2 border-blue-600 mb-4" />
-          <p className="text-gray-600">Loading problems...</p>
+      <div style={{
+        minHeight: '100vh',
+        background: 'var(--bg-primary)',
+        display: 'flex',
+        alignItems: 'center',
+        justifyContent: 'center',
+      }}>
+        <div style={{ textAlign: 'center' }}>
+          <div style={{
+            width: '48px',
+            height: '48px',
+            border: '2px solid var(--bg-border)',
+            borderTopColor: 'var(--accent-primary)',
+            borderRadius: '50%',
+            animation: 'spin 1s linear infinite',
+            margin: '0 auto var(--space-4)',
+          }} />
+          <p style={{
+            color: 'var(--text-secondary)',
+            fontFamily: 'var(--font-mono)',
+            fontSize: 'var(--text-sm)',
+          }}>
+            Loading problems...
+          </p>
         </div>
+        <style jsx>{`
+          @keyframes spin {
+            to { transform: rotate(360deg); }
+          }
+        `}</style>
       </div>
     );
   }
 
   if (error) {
     return (
-      <div className="min-h-screen bg-gray-50 flex items-center justify-center">
-        <div className="bg-red-50 border border-red-200 rounded-lg p-6 max-w-lg">
-          <h2 className="text-red-800 font-semibold mb-2">Error Loading Problems</h2>
-          <p className="text-red-600">{error}</p>
+      <div style={{
+        minHeight: '100vh',
+        background: 'var(--bg-primary)',
+        display: 'flex',
+        alignItems: 'center',
+        justifyContent: 'center',
+        padding: 'var(--space-6)',
+      }}>
+        <div style={{
+          background: 'var(--bg-secondary)',
+          border: '1px solid var(--accent-error)',
+          borderRadius: 'var(--radius-md)',
+          padding: 'var(--space-6)',
+          maxWidth: '500px',
+        }}>
+          <h2 style={{
+            color: 'var(--accent-error)',
+            fontSize: 'var(--text-lg)',
+            fontWeight: 600,
+            marginBottom: 'var(--space-2)',
+          }}>
+            Error Loading Problems
+          </h2>
+          <p style={{
+            color: 'var(--text-secondary)',
+            fontSize: 'var(--text-sm)',
+            fontFamily: 'var(--font-mono)',
+            marginBottom: 'var(--space-4)',
+          }}>
+            {error}
+          </p>
           <button
             onClick={fetchProblems}
-            className="mt-4 px-4 py-2 bg-red-600 text-white rounded-lg hover:bg-red-700 transition-colors"
+            style={{
+              background: 'var(--accent-primary)',
+              color: 'var(--bg-primary)',
+              padding: 'var(--space-2) var(--space-4)',
+              borderRadius: 'var(--radius-sm)',
+              border: 'none',
+              fontSize: 'var(--text-sm)',
+              fontWeight: 500,
+              cursor: 'pointer',
+            }}
           >
             Retry
           </button>
@@ -81,23 +142,64 @@ export default function ProblemsPage() {
   }
 
   return (
-    <div className="min-h-screen bg-gray-50">
+    <div style={{ minHeight: '100vh', background: 'var(--bg-primary)' }}>
       {/* Header */}
-      <header className="bg-white border-b border-gray-200 sticky top-0 z-10">
-        <div className="max-w-full mx-auto px-4 sm:px-6 lg:px-8 py-4">
-          <div className="flex items-center justify-between">
+      <header style={{
+        background: 'var(--bg-secondary)',
+        borderBottom: '1px solid var(--bg-border)',
+        position: 'sticky',
+        top: 0,
+        zIndex: 10,
+      }}>
+        <div style={{
+          maxWidth: '100%',
+          margin: '0 auto',
+          padding: 'var(--space-4) var(--space-6)',
+        }}>
+          <div style={{
+            display: 'flex',
+            alignItems: 'center',
+            justifyContent: 'space-between',
+            flexWrap: 'wrap',
+            gap: 'var(--space-3)',
+          }}>
             <div>
-              <h1 className="text-2xl font-bold text-gray-900">Problems & Projects</h1>
-              <p className="text-sm text-gray-500 mt-1">
+              <h1 style={{
+                fontSize: 'var(--text-2xl)',
+                fontWeight: 600,
+                color: 'var(--text-primary)',
+              }}>
+                Problems & Projects
+              </h1>
+              <p style={{
+                fontSize: 'var(--text-sm)',
+                color: 'var(--text-tertiary)',
+                fontFamily: 'var(--font-mono)',
+                marginTop: 'var(--space-1)',
+              }}>
                 Track ideas, projects, and problems
               </p>
             </div>
-            <div className="flex items-center gap-3">
+            
+            <div style={{
+              display: 'flex',
+              alignItems: 'center',
+              gap: 'var(--space-3)',
+            }}>
               {/* Filter Dropdown */}
               <select
                 value={filter.owner || ""}
                 onChange={(e) => setFilter({ ...filter, owner: e.target.value || undefined })}
-                className="px-3 py-2 border border-gray-300 rounded-lg text-sm focus:outline-none focus:ring-2 focus:ring-blue-500"
+                style={{
+                  padding: 'var(--space-2) var(--space-3)',
+                  background: 'var(--bg-secondary)',
+                  border: '1px solid var(--bg-border)',
+                  borderRadius: 'var(--radius-sm)',
+                  color: 'var(--text-primary)',
+                  fontSize: 'var(--text-sm)',
+                  fontFamily: 'var(--font-mono)',
+                  cursor: 'pointer',
+                }}
               >
                 <option value="">All Owners</option>
                 <option value="birju">Birju</option>
@@ -107,7 +209,23 @@ export default function ProblemsPage() {
 
               <button
                 onClick={() => setShowCreateDialog(true)}
-                className="px-4 py-2 bg-blue-600 text-white rounded-lg hover:bg-blue-700 transition-colors font-medium"
+                style={{
+                  padding: 'var(--space-2) var(--space-4)',
+                  background: 'var(--accent-primary)',
+                  color: 'var(--bg-primary)',
+                  borderRadius: 'var(--radius-sm)',
+                  border: 'none',
+                  fontSize: 'var(--text-sm)',
+                  fontWeight: 500,
+                  cursor: 'pointer',
+                  transition: 'all var(--transition-fast)',
+                }}
+                onMouseEnter={(e) => {
+                  e.currentTarget.style.background = '#00b8e6';
+                }}
+                onMouseLeave={(e) => {
+                  e.currentTarget.style.background = 'var(--accent-primary)';
+                }}
               >
                 + New Problem
               </button>
@@ -117,7 +235,11 @@ export default function ProblemsPage() {
       </header>
 
       {/* Main Content */}
-      <main className="max-w-full mx-auto px-4 sm:px-6 lg:px-8 py-8">
+      <main style={{
+        maxWidth: '100%',
+        margin: '0 auto',
+        padding: 'var(--space-6)',
+      }}>
         <ProblemsKanban
           problems={problems}
           onProblemClick={setSelectedProblem}

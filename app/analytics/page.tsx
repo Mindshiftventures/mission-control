@@ -52,45 +52,117 @@ export default function AnalyticsPage() {
 
   if (loading) {
     return (
-      <div className="min-h-screen bg-gray-50 flex items-center justify-center">
-        <div className="text-center">
-          <div className="inline-block animate-spin rounded-full h-12 w-12 border-b-2 border-blue-600 mb-4" />
-          <p className="text-gray-600">Loading analytics...</p>
+      <div style={{
+        minHeight: '100vh',
+        background: 'var(--bg-primary)',
+        display: 'flex',
+        alignItems: 'center',
+        justifyContent: 'center',
+      }}>
+        <div style={{ textAlign: 'center' }}>
+          <div style={{
+            width: '48px',
+            height: '48px',
+            border: '2px solid var(--bg-border)',
+            borderTopColor: 'var(--accent-primary)',
+            borderRadius: '50%',
+            animation: 'spin 1s linear infinite',
+            margin: '0 auto var(--space-4)',
+          }} />
+          <p style={{
+            color: 'var(--text-secondary)',
+            fontFamily: 'var(--font-mono)',
+            fontSize: 'var(--text-sm)',
+          }}>
+            Loading analytics...
+          </p>
         </div>
+        <style jsx>{`
+          @keyframes spin {
+            to { transform: rotate(360deg); }
+          }
+        `}</style>
       </div>
     );
   }
 
   if (error || !data) {
     return (
-      <div className="min-h-screen bg-gray-50 flex items-center justify-center">
-        <div className="bg-red-50 border border-red-200 rounded-lg p-6 max-w-lg">
-          <h2 className="text-red-800 font-semibold mb-2">Error Loading Analytics</h2>
-          <p className="text-red-600">{error || "No data available"}</p>
+      <div style={{
+        minHeight: '100vh',
+        background: 'var(--bg-primary)',
+        display: 'flex',
+        alignItems: 'center',
+        justifyContent: 'center',
+        padding: 'var(--space-6)',
+      }}>
+        <div style={{
+          background: 'var(--bg-secondary)',
+          border: '1px solid var(--accent-error)',
+          borderRadius: 'var(--radius-md)',
+          padding: 'var(--space-6)',
+          maxWidth: '500px',
+        }}>
+          <h2 style={{
+            color: 'var(--accent-error)',
+            fontSize: 'var(--text-lg)',
+            fontWeight: 600,
+            marginBottom: 'var(--space-2)',
+          }}>
+            Error Loading Analytics
+          </h2>
+          <p style={{
+            color: 'var(--text-secondary)',
+            fontSize: 'var(--text-sm)',
+            fontFamily: 'var(--font-mono)',
+          }}>
+            {error || "No data available"}
+          </p>
         </div>
       </div>
     );
   }
 
   return (
-    <div className="min-h-screen bg-gray-50">
-      <header className="bg-white border-b border-gray-200 sticky top-0 z-10">
-        <div className="max-w-7xl mx-auto px-4 sm:px-6 lg:px-8 py-4">
+    <div style={{ minHeight: '100vh', background: 'var(--bg-primary)' }}>
+      <header style={{
+        background: 'var(--bg-secondary)',
+        borderBottom: '1px solid var(--bg-border)',
+        position: 'sticky',
+        top: 0,
+        zIndex: 10,
+      }}>
+        <div style={{
+          maxWidth: '1600px',
+          margin: '0 auto',
+          padding: 'var(--space-4) var(--space-6)',
+        }}>
           <div>
-            <h1 className="text-2xl font-bold text-gray-900">Cost Analytics</h1>
-            <p className="text-sm text-gray-500 mt-1">
-              30-day cost trends and breakdowns
+            <h1 style={{
+              fontSize: 'var(--text-2xl)',
+              fontWeight: 600,
+              color: 'var(--text-primary)',
+            }}>
+              Cost Analytics
+            </h1>
+            <p style={{
+              fontSize: 'var(--text-sm)',
+              color: 'var(--text-tertiary)',
+              fontFamily: 'var(--font-mono)',
+              marginTop: 'var(--space-1)',
+            }}>
+              30-day cost analysis and trends
             </p>
           </div>
         </div>
       </header>
 
-      <main className="max-w-7xl mx-auto px-4 sm:px-6 lg:px-8 py-8">
-        <CostAnalytics 
-          dailyCosts={data.dailyCosts}
-          agentCosts={data.agentCosts}
-          summary={data.summary}
-        />
+      <main style={{
+        maxWidth: '1600px',
+        margin: '0 auto',
+        padding: 'var(--space-6)',
+      }}>
+        <CostAnalytics data={data} />
       </main>
     </div>
   );

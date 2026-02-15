@@ -163,8 +163,6 @@ export default function DashboardPage() {
         zIndex: 10,
       }}>
         <div style={{
-          maxWidth: '1600px',
-          margin: '0 auto',
           padding: 'var(--space-4) var(--space-6)',
         }}>
           <div style={{
@@ -204,8 +202,6 @@ export default function DashboardPage() {
 
       {/* Main Content */}
       <main style={{
-        maxWidth: '1600px',
-        margin: '0 auto',
         padding: 'var(--space-6)',
       }}>
         <div style={{
@@ -246,7 +242,7 @@ export default function DashboardPage() {
             
             <div style={{
               display: 'grid',
-              gridTemplateColumns: 'repeat(auto-fit, minmax(200px, 1fr))',
+              gridTemplateColumns: 'repeat(auto-fit, minmax(220px, 1fr))',
               gap: 'var(--space-4)',
             }}>
               {agentData?.agents.map((agent) => (

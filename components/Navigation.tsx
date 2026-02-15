@@ -8,7 +8,6 @@ import {
   DocumentTextIcon, 
   ClockIcon, 
   ChartBarIcon,
-  MagnifyingGlassIcon,
   ExclamationTriangleIcon,
   Bars3Icon,
   XMarkIcon,
@@ -26,7 +25,6 @@ const navigation = [
 
 export function Navigation() {
   const pathname = usePathname();
-  const [searchQuery, setSearchQuery] = useState("");
   const [mobileMenuOpen, setMobileMenuOpen] = useState(false);
 
   return (
@@ -55,13 +53,60 @@ export function Navigation() {
       </div>
 
       {/* Sidebar */}
+      <style>{`
+        @media (min-width: 1024px) {
+          [data-sidebar] {
+            transform: translateX(0) !important;
+          }
+        }
+        
+        /* Tooltip styles */
+        [data-tooltip] {
+          position: relative;
+        }
+        
+        [data-tooltip]:hover::after {
+          content: attr(data-tooltip);
+          position: absolute;
+          left: calc(100% + 12px);
+          top: 50%;
+          transform: translateY(-50%);
+          background: var(--bg-tertiary);
+          color: var(--text-primary);
+          padding: var(--space-2) var(--space-3);
+          border-radius: var(--radius-sm);
+          font-size: var(--text-sm);
+          font-family: var(--font-sans);
+          white-space: nowrap;
+          z-index: 1000;
+          border: 1px solid var(--bg-border);
+          box-shadow: 0 4px 12px rgba(0, 0, 0, 0.3);
+          pointer-events: none;
+        }
+        
+        [data-tooltip]:hover::before {
+          content: '';
+          position: absolute;
+          left: calc(100% + 6px);
+          top: 50%;
+          transform: translateY(-50%);
+          width: 0;
+          height: 0;
+          border-top: 6px solid transparent;
+          border-bottom: 6px solid transparent;
+          border-right: 6px solid var(--bg-tertiary);
+          z-index: 1000;
+          pointer-events: none;
+        }
+      `}</style>
       <div
+        data-sidebar
         style={{
           position: 'fixed',
           top: 0,
           bottom: 0,
           left: 0,
-          width: '240px',
+          width: '64px',
           background: 'var(--bg-primary)',
           borderRight: '1px solid var(--bg-border)',
           display: 'flex',
@@ -70,71 +115,35 @@ export function Navigation() {
           transform: mobileMenuOpen ? 'translateX(0)' : 'translateX(-100%)',
           transition: 'transform 0.2s ease-in-out',
         }}
-        className="lg:translate-x-0"
       >
-        {/* Header */}
-        <div style={{
-          padding: 'var(--space-4)',
-          borderBottom: '1px solid var(--bg-border)',
-        }}>
-          <h1 style={{
-            fontSize: 'var(--text-xl)',
-            fontWeight: 600,
-            color: 'var(--text-primary)',
-          }}>
-            Mission Control
-          </h1>
-          <p style={{
-            fontSize: 'var(--text-xs)',
-            color: 'var(--text-tertiary)',
-            fontFamily: 'var(--font-mono)',
-            marginTop: 'var(--space-1)',
-          }}>
-            v2.0 - Dark Technical
-          </p>
-        </div>
-
-        {/* Search */}
+        {/* Minimal Header - Just Icon */}
         <div style={{
           padding: 'var(--space-3)',
           borderBottom: '1px solid var(--bg-border)',
+          display: 'flex',
+          alignItems: 'center',
+          justifyContent: 'center',
         }}>
-          <div style={{ position: 'relative' }}>
-            <MagnifyingGlassIcon style={{
-              position: 'absolute',
-              left: 'var(--space-3)',
-              top: '50%',
-              transform: 'translateY(-50%)',
-              width: '16px',
-              height: '16px',
-              color: 'var(--text-tertiary)',
-            }} />
-            <input
-              type="text"
-              placeholder="Search..."
-              value={searchQuery}
-              onChange={(e) => setSearchQuery(e.target.value)}
-              style={{
-                width: '100%',
-                paddingLeft: 'calc(var(--space-3) * 2 + 16px)',
-                paddingRight: 'var(--space-3)',
-                paddingTop: 'var(--space-2)',
-                paddingBottom: 'var(--space-2)',
-                background: 'var(--bg-secondary)',
-                border: '1px solid var(--bg-border)',
-                borderRadius: 'var(--radius-sm)',
-                color: 'var(--text-primary)',
-                fontSize: 'var(--text-sm)',
-                fontFamily: 'var(--font-mono)',
-              }}
-            />
+          <div style={{
+            width: '32px',
+            height: '32px',
+            background: 'var(--accent-primary)',
+            borderRadius: 'var(--radius-sm)',
+            display: 'flex',
+            alignItems: 'center',
+            justifyContent: 'center',
+            fontSize: '18px',
+            fontWeight: 700,
+            color: 'var(--bg-primary)',
+          }}>
+            MC
           </div>
         </div>
 
-        {/* Navigation Links */}
+        {/* Navigation Links - Icon Only */}
         <nav style={{
           flex: 1,
-          padding: 'var(--space-3)',
+          padding: 'var(--space-2) 0',
           display: 'flex',
           flexDirection: 'column',
           gap: 'var(--space-1)',
@@ -147,25 +156,23 @@ export function Navigation() {
                 key={item.name}
                 href={item.href}
                 onClick={() => setMobileMenuOpen(false)}
+                data-tooltip={item.name}
                 style={{
                   display: 'flex',
                   alignItems: 'center',
-                  gap: 'var(--space-3)',
-                  padding: 'var(--space-2) var(--space-3)',
-                  borderRadius: 'var(--radius-sm)',
-                  color: isActive ? 'var(--text-primary)' : 'var(--text-secondary)',
+                  justifyContent: 'center',
+                  padding: 'var(--space-3)',
+                  color: isActive ? 'var(--accent-primary)' : 'var(--text-secondary)',
                   background: isActive ? 'var(--bg-tertiary)' : 'transparent',
-                  borderLeft: isActive ? '2px solid var(--accent-primary)' : '2px solid transparent',
-                  fontFamily: 'var(--font-sans)',
-                  fontSize: 'var(--text-sm)',
-                  fontWeight: isActive ? 500 : 400,
+                  borderLeft: isActive ? '3px solid var(--accent-primary)' : '3px solid transparent',
                   textDecoration: 'none',
                   transition: 'all var(--transition-fast)',
+                  position: 'relative',
                 }}
                 onMouseEnter={(e) => {
                   if (!isActive) {
                     e.currentTarget.style.background = 'var(--bg-tertiary)';
-                    e.currentTarget.style.color = 'var(--text-primary)';
+                    e.currentTarget.style.color = 'var(--accent-primary)';
                   }
                 }}
                 onMouseLeave={(e) => {
@@ -175,26 +182,30 @@ export function Navigation() {
                   }
                 }}
               >
-                <item.icon style={{ width: '20px', height: '20px', flexShrink: 0 }} />
-                <span>{item.name}</span>
+                <item.icon style={{ width: '24px', height: '24px', flexShrink: 0 }} />
               </Link>
             );
           })}
         </nav>
 
-        {/* Footer */}
+        {/* Minimal Footer - Status Indicator */}
         <div style={{
           padding: 'var(--space-3)',
           borderTop: '1px solid var(--bg-border)',
+          display: 'flex',
+          alignItems: 'center',
+          justifyContent: 'center',
         }}>
-          <div style={{
-            fontSize: 'var(--text-xs)',
-            fontFamily: 'var(--font-mono)',
-            color: 'var(--text-tertiary)',
-          }}>
-            <div>OpenClaw Agent</div>
-            <div style={{ marginTop: 'var(--space-1)' }}>Auto-refresh: 5s</div>
-          </div>
+          <div
+            data-tooltip="Auto-refresh: 5s"
+            style={{
+              width: '8px',
+              height: '8px',
+              background: 'var(--accent-success)',
+              borderRadius: '50%',
+              animation: 'pulse 2s ease-in-out infinite',
+            }}
+          />
         </div>
       </div>
 
@@ -211,6 +222,13 @@ export function Navigation() {
           onClick={() => setMobileMenuOpen(false)}
         />
       )}
+
+      <style jsx>{`
+        @keyframes pulse {
+          0%, 100% { opacity: 1; }
+          50% { opacity: 0.5; }
+        }
+      `}</style>
     </>
   );
 }

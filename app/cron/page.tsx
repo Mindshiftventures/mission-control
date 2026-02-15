@@ -91,7 +91,7 @@ export default function CronPage() {
           border: '1px solid var(--accent-error)',
           borderRadius: 'var(--radius-md)',
           padding: 'var(--space-6)',
-          maxWidth: '500px',
+          maxWidth: '100%',
         }}>
           <h2 style={{
             color: 'var(--accent-error)',
@@ -139,7 +139,7 @@ export default function CronPage() {
         zIndex: 10,
       }}>
         <div style={{
-          maxWidth: '1600px',
+          maxWidth: '100%',
           margin: '0 auto',
           padding: 'var(--space-4) var(--space-6)',
         }}>
@@ -185,7 +185,7 @@ export default function CronPage() {
       </header>
 
       <main style={{
-        maxWidth: '1600px',
+        maxWidth: '100%',
         margin: '0 auto',
         padding: 'var(--space-6)',
       }}>

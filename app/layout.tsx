@@ -31,7 +31,7 @@ export default function RootLayout({
       </head>
       <body className={inter.className}>
         <Navigation />
-        <div className="lg:pl-64">
+        <div className="lg:pl-16">
           {children}
         </div>
       </body>

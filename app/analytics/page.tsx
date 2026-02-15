@@ -162,7 +162,11 @@ export default function AnalyticsPage() {
         margin: '0 auto',
         padding: 'var(--space-6)',
       }}>
-        <CostAnalytics data={data} />
+        <CostAnalytics 
+          dailyCosts={data.dailyCosts}
+          agentCosts={data.agentCosts}
+          summary={data.summary}
+        />
       </main>
     </div>
   );

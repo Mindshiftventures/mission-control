@@ -44,16 +44,10 @@ export function AgentCard({ agent }: AgentCardProps) {
   const [editedModel, setEditedModel] = useState("");
   const [claudeCodeStatus, setClaudeCodeStatus] = useState<ClaudeCodeStatus | null>(null);
   
-  const statusColors = {
-    IDLE: "bg-gray-200 text-gray-700",
-    ACTIVE: "bg-green-100 text-green-700",
-    WORKING: "bg-blue-100 text-blue-700",
-  };
-
-  const statusDots = {
-    IDLE: "bg-gray-400",
-    ACTIVE: "bg-green-500 animate-pulse",
-    WORKING: "bg-blue-500 animate-pulse",
+  const statusColors: Record<string, string> = {
+    IDLE: "#666666",
+    ACTIVE: "#10b981",
+    WORKING: "#00d4ff",
   };
   
   useEffect(() => {
@@ -65,7 +59,7 @@ export function AgentCard({ agent }: AgentCardProps) {
   useEffect(() => {
     if (agent.id === "engineer" || agent.id === "developer") {
       fetchClaudeCodeStatus();
-      const interval = setInterval(fetchClaudeCodeStatus, 30000); // Check every 30s
+      const interval = setInterval(fetchClaudeCodeStatus, 30000);
       return () => clearInterval(interval);
     }
   }, [agent.id]);
@@ -121,166 +115,307 @@ export function AgentCard({ agent }: AgentCardProps) {
   };
 
   return (
-    <div className="bg-white rounded-lg border border-gray-200 p-4 hover:shadow-md transition-shadow">
-      <div className="flex items-start justify-between mb-3">
-        <div className="flex items-center gap-3 flex-1">
-          <span className="text-3xl">{agent.emoji}</span>
-          <div className="flex-1">
-            <h3 className="font-semibold text-gray-900">{agent.name}</h3>
-            <div className="flex items-center gap-2 mt-1 flex-wrap">
-              <span
-                className={`inline-flex items-center gap-1.5 px-2 py-0.5 rounded-full text-xs font-medium ${
-                  statusColors[agent.status]
-                }`}
-              >
-                <span
-                  className={`w-1.5 h-1.5 rounded-full ${statusDots[agent.status]}`}
-                />
-                {agent.status}
-              </span>
-              
-              {claudeCodeStatus?.isActive && (
-                <span className="inline-flex items-center gap-1.5 px-2 py-0.5 rounded-full text-xs font-medium bg-purple-100 text-purple-700">
-                  <CodeBracketIcon className="w-3 h-3" />
-                  Claude Code Active
-                </span>
-              )}
-            </div>
-          </div>
-        </div>
-        
+    <div 
+      style={{
+        background: 'var(--bg-secondary)',
+        border: '1px solid var(--bg-border)',
+        borderRadius: 'var(--radius-sm)',
+        padding: 'var(--space-3)',
+        transition: 'all var(--transition-fast)',
+        minWidth: '200px',
+      }}
+      onMouseEnter={(e) => {
+        e.currentTarget.style.borderColor = 'var(--accent-primary)';
+      }}
+      onMouseLeave={(e) => {
+        e.currentTarget.style.borderColor = 'var(--bg-border)';
+      }}
+    >
+      {/* Header Row */}
+      <div style={{ display: 'flex', alignItems: 'center', gap: 'var(--space-2)', marginBottom: 'var(--space-1)' }}>
+        <span
+          style={{
+            width: '6px',
+            height: '6px',
+            borderRadius: '50%',
+            backgroundColor: statusColors[agent.status],
+            display: 'inline-block',
+          }}
+        />
+        <span
+          style={{
+            fontFamily: 'var(--font-mono)',
+            fontSize: 'var(--text-base)',
+            color: 'var(--text-primary)',
+            fontWeight: 500,
+            flex: 1,
+          }}
+        >
+          {agent.name}
+        </span>
         <button
           onClick={() => setShowConfig(!showConfig)}
-          className="text-gray-400 hover:text-gray-600 transition-colors"
+          style={{
+            background: 'transparent',
+            border: 'none',
+            color: 'var(--text-tertiary)',
+            padding: 0,
+            display: 'flex',
+            alignItems: 'center',
+          }}
         >
           {showConfig ? (
-            <ChevronUpIcon className="w-5 h-5" />
+            <ChevronUpIcon style={{ width: '16px', height: '16px' }} />
           ) : (
-            <ChevronDownIcon className="w-5 h-5" />
+            <ChevronDownIcon style={{ width: '16px', height: '16px' }} />
           )}
         </button>
       </div>
 
-      {agent.currentTask && (
-        <div className="mb-3 p-2 bg-blue-50 rounded-md">
-          <p className="text-xs text-gray-500 mb-1">Current Task:</p>
-          <p className="text-sm text-gray-700 font-medium">{agent.currentTask}</p>
-        </div>
-      )}
-
-      <div className="grid grid-cols-2 gap-2 text-sm">
-        <div>
-          <span className="text-gray-500">Tokens:</span>
-          <span className="ml-1 font-medium text-gray-900">
-            {agent.totalTokens.toLocaleString()}
-          </span>
-        </div>
-        <div>
-          <span className="text-gray-500">Cost:</span>
-          <span className="ml-1 font-medium text-gray-900">
-            ${agent.cost.toFixed(2)}
-          </span>
-        </div>
+      {/* Status & Time */}
+      <div style={{ 
+        display: 'flex', 
+        alignItems: 'center', 
+        gap: 'var(--space-2)', 
+        fontFamily: 'var(--font-mono)',
+        fontSize: 'var(--text-xs)',
+        marginBottom: 'var(--space-2)',
+      }}>
+        <span
+          style={{
+            color: statusColors[agent.status],
+            textTransform: 'uppercase',
+            letterSpacing: '0.5px',
+          }}
+        >
+          {agent.status}
+        </span>
+        <span style={{ color: 'var(--text-tertiary)' }}>|</span>
+        <span style={{ color: 'var(--text-tertiary)' }}>
+          {agent.lastActivity 
+            ? formatDistanceToNow(new Date(agent.lastActivity), { addSuffix: false })
+            : 'never'}
+        </span>
       </div>
 
-      {agent.lastActivity && (
-        <div className="mt-2 text-xs text-gray-500">
-          Last active {formatDistanceToNow(new Date(agent.lastActivity), { addSuffix: true })}
+      {/* Claude Code Badge */}
+      {claudeCodeStatus?.isActive && (
+        <div style={{ 
+          display: 'flex', 
+          alignItems: 'center', 
+          gap: 'var(--space-1)',
+          marginBottom: 'var(--space-2)',
+          fontFamily: 'var(--font-mono)',
+          fontSize: 'var(--text-xs)',
+          color: 'var(--accent-secondary)',
+        }}>
+          <CodeBracketIcon style={{ width: '12px', height: '12px' }} />
+          <span>CLAUDE CODE</span>
         </div>
       )}
+
+      {/* Current Task */}
+      {agent.currentTask && (
+        <div style={{
+          background: 'rgba(0, 212, 255, 0.1)',
+          borderLeft: '2px solid var(--accent-primary)',
+          padding: 'var(--space-2)',
+          marginBottom: 'var(--space-2)',
+          borderRadius: 'var(--radius-sm)',
+        }}>
+          <p style={{
+            fontSize: 'var(--text-xs)',
+            color: 'var(--text-tertiary)',
+            marginBottom: 'var(--space-1)',
+          }}>
+            Current Task:
+          </p>
+          <p style={{
+            fontSize: 'var(--text-sm)',
+            color: 'var(--text-primary)',
+            fontFamily: 'var(--font-mono)',
+          }}>
+            {agent.currentTask}
+          </p>
+        </div>
+      )}
+
+      {/* Divider */}
+      <hr style={{
+        border: 'none',
+        height: '1px',
+        background: 'var(--bg-border)',
+        margin: 'var(--space-2) 0',
+      }} />
+
+      {/* Metrics */}
+      <div style={{
+        display: 'flex',
+        flexDirection: 'column',
+        gap: 'var(--space-1)',
+        fontFamily: 'var(--font-mono)',
+        fontSize: 'var(--text-sm)',
+        color: 'var(--text-secondary)',
+      }}>
+        <div>
+          <span style={{ color: 'var(--text-tertiary)' }}>Tasks:</span>
+          {' '}
+          <span>{agent.totalTokens > 0 ? Math.floor(agent.totalTokens / 10000) : 0}</span>
+        </div>
+        <div>
+          <span style={{ color: 'var(--text-tertiary)' }}>Memory:</span>
+          {' '}
+          <span>{((agent.totalTokens / 200000) * 100).toFixed(0)}%</span>
+        </div>
+      </div>
       
+      {/* Config Panel */}
       {showConfig && agentConfig && (
-        <div className="mt-4 pt-4 border-t border-gray-200">
-          <div className="space-y-3">
-            <div className="flex items-center justify-between mb-2">
-              <h4 className="font-medium text-sm text-gray-700">Configuration</h4>
-              {!isEditing ? (
+        <div style={{
+          marginTop: 'var(--space-3)',
+          paddingTop: 'var(--space-3)',
+          borderTop: '1px solid var(--bg-border)',
+        }}>
+          <div style={{ display: 'flex', justifyContent: 'space-between', marginBottom: 'var(--space-2)' }}>
+            <h4 style={{
+              fontFamily: 'var(--font-sans)',
+              fontSize: 'var(--text-sm)',
+              color: 'var(--text-secondary)',
+              fontWeight: 500,
+            }}>
+              Configuration
+            </h4>
+            {!isEditing ? (
+              <button
+                onClick={() => setIsEditing(true)}
+                style={{
+                  display: 'flex',
+                  alignItems: 'center',
+                  gap: 'var(--space-1)',
+                  fontSize: 'var(--text-xs)',
+                  color: 'var(--accent-primary)',
+                  background: 'transparent',
+                  border: 'none',
+                }}
+              >
+                <PencilIcon style={{ width: '12px', height: '12px' }} />
+                Edit
+              </button>
+            ) : (
+              <div style={{ display: 'flex', gap: 'var(--space-2)' }}>
                 <button
-                  onClick={() => setIsEditing(true)}
-                  className="flex items-center gap-1 text-xs text-blue-600 hover:text-blue-700"
+                  onClick={handleSaveConfig}
+                  style={{
+                    display: 'flex',
+                    alignItems: 'center',
+                    gap: 'var(--space-1)',
+                    fontSize: 'var(--text-xs)',
+                    color: 'var(--accent-success)',
+                    background: 'transparent',
+                    border: 'none',
+                  }}
                 >
-                  <PencilIcon className="w-3 h-3" />
-                  Edit
+                  <CheckIcon style={{ width: '12px', height: '12px' }} />
+                  Save
                 </button>
+                <button
+                  onClick={() => {
+                    setIsEditing(false);
+                    setEditedModel(agentConfig.model.primary);
+                  }}
+                  style={{
+                    display: 'flex',
+                    alignItems: 'center',
+                    gap: 'var(--space-1)',
+                    fontSize: 'var(--text-xs)',
+                    color: 'var(--accent-error)',
+                    background: 'transparent',
+                    border: 'none',
+                  }}
+                >
+                  <XMarkIcon style={{ width: '12px', height: '12px' }} />
+                  Cancel
+                </button>
+              </div>
+            )}
+          </div>
+          
+          <div style={{
+            display: 'flex',
+            flexDirection: 'column',
+            gap: 'var(--space-2)',
+            fontSize: 'var(--text-xs)',
+          }}>
+            <div>
+              <span style={{ color: 'var(--text-tertiary)' }}>ID:</span>
+              {' '}
+              <span style={{ fontFamily: 'var(--font-mono)', color: 'var(--text-secondary)' }}>
+                {agentConfig.id}
+              </span>
+            </div>
+            
+            <div>
+              <span style={{ color: 'var(--text-tertiary)' }}>Model:</span>
+              {isEditing ? (
+                <input
+                  type="text"
+                  value={editedModel}
+                  onChange={(e) => setEditedModel(e.target.value)}
+                  style={{
+                    width: '100%',
+                    marginTop: 'var(--space-1)',
+                    fontFamily: 'var(--font-mono)',
+                  }}
+                />
               ) : (
-                <div className="flex items-center gap-2">
-                  <button
-                    onClick={handleSaveConfig}
-                    className="flex items-center gap-1 text-xs text-green-600 hover:text-green-700"
-                  >
-                    <CheckIcon className="w-3 h-3" />
-                    Save
-                  </button>
-                  <button
-                    onClick={() => {
-                      setIsEditing(false);
-                      setEditedModel(agentConfig.model.primary);
-                    }}
-                    className="flex items-center gap-1 text-xs text-red-600 hover:text-red-700"
-                  >
-                    <XMarkIcon className="w-3 h-3" />
-                    Cancel
-                  </button>
-                </div>
+                <span style={{ 
+                  marginLeft: 'var(--space-2)', 
+                  fontFamily: 'var(--font-mono)', 
+                  color: 'var(--text-secondary)',
+                  display: 'block',
+                  marginTop: 'var(--space-1)',
+                  wordBreak: 'break-all',
+                }}>
+                  {agentConfig.model.primary}
+                </span>
               )}
             </div>
             
-            <div className="space-y-2 text-xs">
+            {agentConfig.workspace && (
               <div>
-                <span className="text-gray-500">ID:</span>
-                <span className="ml-2 font-mono text-gray-700">{agentConfig.id}</span>
+                <span style={{ color: 'var(--text-tertiary)' }}>Workspace:</span>
+                <span style={{ 
+                  marginLeft: 'var(--space-2)', 
+                  fontFamily: 'var(--font-mono)', 
+                  color: 'var(--text-secondary)',
+                  fontSize: '10px',
+                  display: 'block',
+                  marginTop: 'var(--space-1)',
+                  wordBreak: 'break-all',
+                }}>
+                  {agentConfig.workspace}
+                </span>
               </div>
-              
-              <div>
-                <span className="text-gray-500">Model:</span>
-                {isEditing ? (
-                  <input
-                    type="text"
-                    value={editedModel}
-                    onChange={(e) => setEditedModel(e.target.value)}
-                    className="ml-2 px-2 py-1 border border-gray-300 rounded text-xs font-mono w-full mt-1"
-                  />
-                ) : (
-                  <span className="ml-2 font-mono text-gray-700">{agentConfig.model.primary}</span>
-                )}
+            )}
+            
+            {claudeCodeStatus && (
+              <div style={{ paddingTop: 'var(--space-2)', borderTop: '1px solid rgba(51, 51, 51, 0.5)' }}>
+                <span style={{ color: 'var(--text-tertiary)' }}>Claude Code:</span>
+                <div style={{ marginLeft: 'var(--space-2)', marginTop: 'var(--space-1)' }}>
+                  <span style={{ 
+                    fontWeight: 500, 
+                    color: claudeCodeStatus.isActive ? 'var(--accent-secondary)' : 'var(--text-tertiary)',
+                  }}>
+                    {claudeCodeStatus.isActive ? 'Active' : 'Inactive'}
+                  </span>
+                  {claudeCodeStatus.isActive && claudeCodeStatus.details && (
+                    <div style={{ fontSize: '10px', color: 'var(--text-tertiary)', marginTop: 'var(--space-1)' }}>
+                      Detection: {claudeCodeStatus.method}
+                    </div>
+                  )}
+                </div>
               </div>
-              
-              {agentConfig.workspace && (
-                <div>
-                  <span className="text-gray-500">Workspace:</span>
-                  <span className="ml-2 font-mono text-gray-700 text-[10px]">{agentConfig.workspace}</span>
-                </div>
-              )}
-              
-              {agentConfig.model.fallbacks && agentConfig.model.fallbacks.length > 0 && (
-                <div>
-                  <span className="text-gray-500">Fallbacks:</span>
-                  <div className="ml-2 mt-1 space-y-1">
-                    {agentConfig.model.fallbacks.map((fallback: string, idx: number) => (
-                      <div key={idx} className="font-mono text-gray-600 text-[10px]">
-                        {idx + 1}. {fallback}
-                      </div>
-                    ))}
-                  </div>
-                </div>
-              )}
-              
-              {claudeCodeStatus && (
-                <div className="pt-2 border-t border-gray-100">
-                  <span className="text-gray-500">Claude Code:</span>
-                  <div className="ml-2 mt-1">
-                    <span className={`font-medium ${claudeCodeStatus.isActive ? 'text-purple-600' : 'text-gray-500'}`}>
-                      {claudeCodeStatus.isActive ? 'Active' : 'Inactive'}
-                    </span>
-                    {claudeCodeStatus.isActive && claudeCodeStatus.details && (
-                      <div className="text-[10px] text-gray-500 mt-1">
-                        Detection: {claudeCodeStatus.method}
-                      </div>
-                    )}
-                  </div>
-                </div>
-              )}
-            </div>
+            )}
           </div>
         </div>
       )}

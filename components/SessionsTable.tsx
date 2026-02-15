@@ -10,60 +10,189 @@ interface SessionsTableProps {
 export function SessionsTable({ sessions }: SessionsTableProps) {
   if (sessions.length === 0) {
     return (
-      <div className="bg-white rounded-lg border border-gray-200 p-8 text-center">
-        <p className="text-gray-500">No completed sessions today</p>
+      <div style={{
+        background: 'var(--bg-secondary)',
+        border: '1px solid var(--bg-border)',
+        borderRadius: 'var(--radius-md)',
+        padding: 'var(--space-8)',
+        textAlign: 'center',
+      }}>
+        <p style={{
+          color: 'var(--text-tertiary)',
+          fontFamily: 'var(--font-mono)',
+          fontSize: 'var(--text-sm)',
+        }}>
+          No completed sessions today
+        </p>
       </div>
     );
   }
 
   return (
-    <div className="bg-white rounded-lg border border-gray-200 overflow-hidden">
-      <div className="px-6 py-4 border-b border-gray-200">
-        <h2 className="text-xl font-semibold text-gray-900">Recent Sessions</h2>
+    <div style={{
+      background: 'var(--bg-secondary)',
+      border: '1px solid var(--bg-border)',
+      borderRadius: 'var(--radius-md)',
+      overflow: 'hidden',
+    }}>
+      {/* Header */}
+      <div style={{
+        padding: 'var(--space-4)',
+        borderBottom: '1px solid var(--bg-border)',
+      }}>
+        <h2 style={{
+          fontSize: 'var(--text-lg)',
+          fontWeight: 500,
+          color: 'var(--text-primary)',
+        }}>
+          Recent Sessions
+        </h2>
       </div>
 
-      <div className="overflow-x-auto">
-        <table className="w-full">
-          <thead className="bg-gray-50 border-b border-gray-200">
-            <tr>
-              <th className="px-6 py-3 text-left text-xs font-medium text-gray-500 uppercase tracking-wider">
+      {/* Table */}
+      <div style={{ overflowX: 'auto' }}>
+        <table style={{ width: '100%', borderCollapse: 'collapse' }}>
+          <thead>
+            <tr style={{ borderBottom: '1px solid var(--bg-border)' }}>
+              <th style={{
+                padding: 'var(--space-2) var(--space-3)',
+                textAlign: 'left',
+                fontFamily: 'var(--font-sans)',
+                fontSize: 'var(--text-xs)',
+                fontWeight: 500,
+                color: 'var(--text-tertiary)',
+                textTransform: 'uppercase',
+                letterSpacing: '0.5px',
+              }}>
                 Agent
               </th>
-              <th className="px-6 py-3 text-left text-xs font-medium text-gray-500 uppercase tracking-wider">
+              <th style={{
+                padding: 'var(--space-2) var(--space-3)',
+                textAlign: 'left',
+                fontFamily: 'var(--font-sans)',
+                fontSize: 'var(--text-xs)',
+                fontWeight: 500,
+                color: 'var(--text-tertiary)',
+                textTransform: 'uppercase',
+                letterSpacing: '0.5px',
+              }}>
                 Task
               </th>
-              <th className="px-6 py-3 text-left text-xs font-medium text-gray-500 uppercase tracking-wider">
+              <th style={{
+                padding: 'var(--space-2) var(--space-3)',
+                textAlign: 'left',
+                fontFamily: 'var(--font-sans)',
+                fontSize: 'var(--text-xs)',
+                fontWeight: 500,
+                color: 'var(--text-tertiary)',
+                textTransform: 'uppercase',
+                letterSpacing: '0.5px',
+              }}>
                 Tokens
               </th>
-              <th className="px-6 py-3 text-left text-xs font-medium text-gray-500 uppercase tracking-wider">
+              <th style={{
+                padding: 'var(--space-2) var(--space-3)',
+                textAlign: 'left',
+                fontFamily: 'var(--font-sans)',
+                fontSize: 'var(--text-xs)',
+                fontWeight: 500,
+                color: 'var(--text-tertiary)',
+                textTransform: 'uppercase',
+                letterSpacing: '0.5px',
+              }}>
                 Cost
               </th>
-              <th className="px-6 py-3 text-left text-xs font-medium text-gray-500 uppercase tracking-wider">
+              <th style={{
+                padding: 'var(--space-2) var(--space-3)',
+                textAlign: 'left',
+                fontFamily: 'var(--font-sans)',
+                fontSize: 'var(--text-xs)',
+                fontWeight: 500,
+                color: 'var(--text-tertiary)',
+                textTransform: 'uppercase',
+                letterSpacing: '0.5px',
+              }}>
                 Completed
               </th>
             </tr>
           </thead>
-          <tbody className="divide-y divide-gray-200">
+          <tbody>
             {sessions.map((session, idx) => (
-              <tr key={idx} className="hover:bg-gray-50 transition-colors">
-                <td className="px-6 py-4 whitespace-nowrap">
-                  <div className="text-sm font-medium text-gray-900">{session.agentName}</div>
+              <tr
+                key={idx}
+                style={{
+                  borderBottom: '1px solid var(--bg-border)',
+                  transition: 'background var(--transition-fast)',
+                }}
+                onMouseEnter={(e) => {
+                  e.currentTarget.style.background = 'var(--bg-tertiary)';
+                }}
+                onMouseLeave={(e) => {
+                  e.currentTarget.style.background = 'transparent';
+                }}
+              >
+                <td style={{
+                  padding: 'var(--space-2) var(--space-3)',
+                  whiteSpace: 'nowrap',
+                }}>
+                  <div style={{
+                    fontFamily: 'var(--font-mono)',
+                    fontSize: 'var(--text-sm)',
+                    color: 'var(--text-primary)',
+                    fontWeight: 500,
+                  }}>
+                    {session.agentName}
+                  </div>
                 </td>
-                <td className="px-6 py-4">
-                  <div className="text-sm text-gray-900 max-w-md truncate">
+                <td style={{
+                  padding: 'var(--space-2) var(--space-3)',
+                }}>
+                  <div style={{
+                    fontFamily: 'var(--font-mono)',
+                    fontSize: 'var(--text-sm)',
+                    color: 'var(--text-secondary)',
+                    maxWidth: '400px',
+                    overflow: 'hidden',
+                    textOverflow: 'ellipsis',
+                    whiteSpace: 'nowrap',
+                  }}>
                     {session.label}
                   </div>
                 </td>
-                <td className="px-6 py-4 whitespace-nowrap">
-                  <div className="text-sm text-gray-900">{session.tokens.toLocaleString()}</div>
+                <td style={{
+                  padding: 'var(--space-2) var(--space-3)',
+                  whiteSpace: 'nowrap',
+                }}>
+                  <div style={{
+                    fontFamily: 'var(--font-mono)',
+                    fontSize: 'var(--text-sm)',
+                    color: 'var(--text-secondary)',
+                  }}>
+                    {session.tokens.toLocaleString()}
+                  </div>
                 </td>
-                <td className="px-6 py-4 whitespace-nowrap">
-                  <div className="text-sm font-medium text-gray-900">
+                <td style={{
+                  padding: 'var(--space-2) var(--space-3)',
+                  whiteSpace: 'nowrap',
+                }}>
+                  <div style={{
+                    fontFamily: 'var(--font-mono)',
+                    fontSize: 'var(--text-sm)',
+                    color: 'var(--accent-primary)',
+                    fontWeight: 500,
+                  }}>
                     ${session.cost.toFixed(2)}
                   </div>
                 </td>
-                <td className="px-6 py-4 whitespace-nowrap">
-                  <div className="text-sm text-gray-500">
+                <td style={{
+                  padding: 'var(--space-2) var(--space-3)',
+                  whiteSpace: 'nowrap',
+                }}>
+                  <div style={{
+                    fontFamily: 'var(--font-mono)',
+                    fontSize: 'var(--text-xs)',
+                    color: 'var(--text-tertiary)',
+                  }}>
                     {formatDistanceToNow(new Date(session.completedAt), { addSuffix: true })}
                   </div>
                 </td>

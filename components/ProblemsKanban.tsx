@@ -10,24 +10,30 @@ interface ProblemsKanbanProps {
 }
 
 const COLUMNS = [
-  { id: "backlog", name: "Backlog", color: "bg-gray-100" },
-  { id: "planning", name: "Planning", color: "bg-blue-100" },
-  { id: "in_progress", name: "In Progress", color: "bg-yellow-100" },
-  { id: "blocked", name: "Blocked", color: "bg-red-100" },
-  { id: "review", name: "Review", color: "bg-purple-100" },
-  { id: "done", name: "Done", color: "bg-green-100" },
+  { id: "backlog", name: "BACKLOG" },
+  { id: "planning", name: "PLANNING" },
+  { id: "in_progress", name: "IN PROGRESS" },
+  { id: "blocked", name: "BLOCKED" },
+  { id: "review", name: "REVIEW" },
+  { id: "done", name: "DONE" },
 ];
 
 const PRIORITY_COLORS = {
-  0: "bg-gray-200 text-gray-700",
-  1: "bg-yellow-200 text-yellow-800",
-  2: "bg-red-200 text-red-800",
+  0: "var(--accent-info)",
+  1: "var(--accent-warning)",
+  2: "var(--accent-error)",
 };
 
 const PRIORITY_LABELS = {
-  0: "Low",
-  1: "Medium",
-  2: "High",
+  0: "LOW",
+  1: "MEDIUM",
+  2: "HIGH",
+};
+
+const PRIORITY_ICONS = {
+  0: "💡",
+  1: "⚠",
+  2: "🔥",
 };
 
 export function ProblemsKanban({ problems, onProblemClick, onRefresh }: ProblemsKanbanProps) {
@@ -67,118 +73,217 @@ export function ProblemsKanban({ problems, onProblemClick, onRefresh }: Problems
   };
 
   return (
-    <div className="flex gap-4 overflow-x-auto pb-4">
+    <div style={{
+      display: 'flex',
+      gap: 'var(--space-4)',
+      overflowX: 'auto',
+      paddingBottom: 'var(--space-4)',
+    }}>
       {COLUMNS.map((column) => {
         const columnProblems = getProblemsByStatus(column.id);
 
         return (
           <div
             key={column.id}
-            className="flex-shrink-0 w-80"
+            style={{
+              flexShrink: 0,
+              width: '320px',
+            }}
             onDragOver={handleDragOver}
             onDrop={() => handleDrop(column.id)}
           >
             {/* Column Header */}
-            <div className={`${column.color} rounded-t-lg px-4 py-3 border-b border-gray-300`}>
-              <div className="flex items-center justify-between">
-                <h3 className="font-semibold text-gray-900">{column.name}</h3>
-                <span className="text-sm font-medium text-gray-600">
-                  {columnProblems.length}
+            <div style={{
+              background: 'var(--bg-primary)',
+              border: '1px solid var(--bg-border)',
+              borderRadius: 'var(--radius-md)',
+              padding: 'var(--space-3)',
+            }}>
+              <div style={{
+                display: 'flex',
+                alignItems: 'center',
+                justifyContent: 'space-between',
+                paddingBottom: 'var(--space-2)',
+                borderBottom: '1px solid var(--bg-border)',
+              }}>
+                <h3 style={{
+                  fontFamily: 'var(--font-sans)',
+                  fontSize: 'var(--text-sm)',
+                  fontWeight: 500,
+                  color: 'var(--text-secondary)',
+                  textTransform: 'uppercase',
+                  letterSpacing: '0.5px',
+                }}>
+                  {column.name}
+                </h3>
+                <span style={{
+                  fontFamily: 'var(--font-mono)',
+                  fontSize: 'var(--text-xs)',
+                  color: 'var(--text-tertiary)',
+                }}>
+                  ({columnProblems.length})
                 </span>
               </div>
-            </div>
 
-            {/* Column Body */}
-            <div className="bg-gray-50 rounded-b-lg p-3 min-h-[500px] space-y-3">
-              {columnProblems.map((problem) => (
-                <div
-                  key={problem.id}
-                  draggable
-                  onDragStart={() => handleDragStart(problem)}
-                  onClick={() => onProblemClick(problem)}
-                  className="bg-white rounded-lg p-4 shadow-sm border border-gray-200 cursor-pointer hover:shadow-md transition-shadow"
-                >
-                  {/* Title */}
-                  <h4 className="font-medium text-gray-900 mb-2 line-clamp-2">
-                    {problem.title}
-                  </h4>
-
-                  {/* Description */}
-                  {problem.description && (
-                    <p className="text-sm text-gray-600 mb-3 line-clamp-2">
-                      {problem.description}
-                    </p>
-                  )}
-
-                  {/* Tags */}
-                  {problem.tags && problem.tags.length > 0 && (
-                    <div className="flex flex-wrap gap-1 mb-3">
-                      {problem.tags.slice(0, 3).map((tag) => (
-                        <span
-                          key={tag}
-                          className="px-2 py-1 bg-blue-100 text-blue-700 rounded text-xs font-medium"
-                        >
-                          {tag}
-                        </span>
-                      ))}
-                      {problem.tags.length > 3 && (
-                        <span className="px-2 py-1 bg-gray-100 text-gray-600 rounded text-xs font-medium">
-                          +{problem.tags.length - 3}
-                        </span>
-                      )}
-                    </div>
-                  )}
-
-                  {/* Footer */}
-                  <div className="flex items-center justify-between text-xs">
-                    <div className="flex items-center gap-2">
-                      {/* Priority */}
-                      <span
-                        className={`px-2 py-1 rounded font-medium ${
-                          PRIORITY_COLORS[problem.priority as keyof typeof PRIORITY_COLORS]
-                        }`}
-                      >
+              {/* Column Body */}
+              <div style={{
+                marginTop: 'var(--space-3)',
+                display: 'flex',
+                flexDirection: 'column',
+                gap: 'var(--space-2)',
+                minHeight: '500px',
+              }}>
+                {columnProblems.map((problem) => (
+                  <div
+                    key={problem.id}
+                    draggable
+                    onDragStart={() => handleDragStart(problem)}
+                    onClick={() => onProblemClick(problem)}
+                    style={{
+                      background: 'var(--bg-secondary)',
+                      borderLeft: `3px solid ${PRIORITY_COLORS[problem.priority as keyof typeof PRIORITY_COLORS]}`,
+                      borderRadius: 'var(--radius-sm)',
+                      padding: '10px 12px',
+                      cursor: 'pointer',
+                      transition: 'all var(--transition-fast)',
+                    }}
+                    onMouseEnter={(e) => {
+                      e.currentTarget.style.background = 'var(--bg-tertiary)';
+                      e.currentTarget.style.borderLeftColor = 'var(--accent-primary)';
+                    }}
+                    onMouseLeave={(e) => {
+                      e.currentTarget.style.background = 'var(--bg-secondary)';
+                      e.currentTarget.style.borderLeftColor = PRIORITY_COLORS[problem.priority as keyof typeof PRIORITY_COLORS];
+                    }}
+                  >
+                    {/* Header */}
+                    <div style={{
+                      display: 'flex',
+                      alignItems: 'center',
+                      gap: 'var(--space-2)',
+                      marginBottom: 'var(--space-1)',
+                    }}>
+                      <span style={{ fontSize: '14px' }}>
+                        {PRIORITY_ICONS[problem.priority as keyof typeof PRIORITY_ICONS]}
+                      </span>
+                      <span style={{
+                        fontFamily: 'var(--font-mono)',
+                        fontSize: 'var(--text-xs)',
+                        color: PRIORITY_COLORS[problem.priority as keyof typeof PRIORITY_COLORS],
+                        textTransform: 'uppercase',
+                        letterSpacing: '0.5px',
+                      }}>
                         {PRIORITY_LABELS[problem.priority as keyof typeof PRIORITY_LABELS]}
                       </span>
+                      <span style={{
+                        marginLeft: 'auto',
+                        fontFamily: 'var(--font-mono)',
+                        fontSize: 'var(--text-xs)',
+                        color: 'var(--text-tertiary)',
+                        textTransform: 'uppercase',
+                      }}>
+                        {column.id === 'done' ? 'RESOLVED' : 'OPEN'}
+                      </span>
+                    </div>
 
-                      {/* Owner */}
+                    {/* Title */}
+                    <h4 style={{
+                      fontFamily: 'var(--font-sans)',
+                      fontSize: 'var(--text-sm)',
+                      color: 'var(--text-primary)',
+                      marginBottom: 'var(--space-1)',
+                      overflow: 'hidden',
+                      textOverflow: 'ellipsis',
+                      display: '-webkit-box',
+                      WebkitLineClamp: 2,
+                      WebkitBoxOrient: 'vertical',
+                    }}>
+                      {problem.title}
+                    </h4>
+
+                    {/* Description */}
+                    {problem.description && (
+                      <p style={{
+                        fontFamily: 'var(--font-mono)',
+                        fontSize: 'var(--text-xs)',
+                        color: 'var(--text-tertiary)',
+                        marginBottom: 'var(--space-2)',
+                        overflow: 'hidden',
+                        textOverflow: 'ellipsis',
+                        display: '-webkit-box',
+                        WebkitLineClamp: 2,
+                        WebkitBoxOrient: 'vertical',
+                      }}>
+                        {problem.description}
+                      </p>
+                    )}
+
+                    {/* Tags */}
+                    {problem.tags && problem.tags.length > 0 && (
+                      <div style={{
+                        display: 'flex',
+                        flexWrap: 'wrap',
+                        gap: 'var(--space-1)',
+                        marginBottom: 'var(--space-2)',
+                      }}>
+                        {problem.tags.slice(0, 3).map((tag) => (
+                          <span
+                            key={tag}
+                            style={{
+                              fontFamily: 'var(--font-mono)',
+                              fontSize: '10px',
+                              color: 'var(--accent-info)',
+                              background: 'rgba(59, 130, 246, 0.1)',
+                              padding: '2px 6px',
+                              borderRadius: 'var(--radius-sm)',
+                              textTransform: 'uppercase',
+                            }}
+                          >
+                            {tag}
+                          </span>
+                        ))}
+                        {problem.tags.length > 3 && (
+                          <span style={{
+                            fontFamily: 'var(--font-mono)',
+                            fontSize: '10px',
+                            color: 'var(--text-tertiary)',
+                            background: 'var(--bg-tertiary)',
+                            padding: '2px 6px',
+                            borderRadius: 'var(--radius-sm)',
+                          }}>
+                            +{problem.tags.length - 3}
+                          </span>
+                        )}
+                      </div>
+                    )}
+
+                    {/* Footer */}
+                    <div style={{
+                      display: 'flex',
+                      gap: 'var(--space-2)',
+                      fontFamily: 'var(--font-mono)',
+                      fontSize: 'var(--text-xs)',
+                      color: 'var(--text-tertiary)',
+                    }}>
                       {problem.owner && (
-                        <span className="text-gray-500">👤 {problem.owner}</span>
+                        <span>{problem.owner}</span>
+                      )}
+                      {problem.owner && problem.assignee && (
+                        <span>•</span>
+                      )}
+                      {problem.assignee && (
+                        <span>{problem.assignee}</span>
+                      )}
+                      {(problem.owner || problem.assignee) && problem.createdAt && (
+                        <span>•</span>
+                      )}
+                      {problem.createdAt && (
+                        <span>{new Date(problem.createdAt).toLocaleDateString()}</span>
                       )}
                     </div>
-
-                    {/* Assignee */}
-                    {problem.assignee && (
-                      <span className="text-gray-600 font-medium">
-                        → {problem.assignee}
-                      </span>
-                    )}
                   </div>
-
-                  {/* Blocked Indicator */}
-                  {problem.status === "blocked" && problem.blockedReason && (
-                    <div className="mt-2 pt-2 border-t border-gray-200">
-                      <p className="text-xs text-red-600">
-                        🚫 {problem.blockedReason}
-                      </p>
-                    </div>
-                  )}
-
-                  {/* Telegram Badge */}
-                  {problem.createdFromTelegram && (
-                    <div className="mt-2 pt-2 border-t border-gray-200">
-                      <span className="text-xs text-blue-600">📱 From Telegram</span>
-                    </div>
-                  )}
-                </div>
-              ))}
-
-              {/* Empty State */}
-              {columnProblems.length === 0 && (
-                <div className="text-center py-8 text-gray-400 text-sm">
-                  No items
-                </div>
-              )}
+                ))}
+              </div>
             </div>
           </div>
         );

@@ -21,47 +21,182 @@ export function CostSummary({ data }: CostSummaryProps) {
   const { totalCost, totalTokens, tasksToday, byAgent } = data;
 
   return (
-    <div className="bg-white rounded-lg border border-gray-200 p-6">
-      <h2 className="text-xl font-semibold text-gray-900 mb-4">Today's Summary</h2>
+    <div style={{
+      background: 'var(--bg-secondary)',
+      border: '1px solid var(--bg-border)',
+      borderRadius: 'var(--radius-md)',
+      padding: 'var(--space-4)',
+    }}>
+      <div style={{
+        display: 'flex',
+        alignItems: 'center',
+        justifyContent: 'space-between',
+        marginBottom: 'var(--space-4)',
+        paddingBottom: 'var(--space-3)',
+        borderBottom: '1px solid var(--bg-border)',
+      }}>
+        <h2 style={{
+          fontSize: 'var(--text-lg)',
+          fontWeight: 500,
+          color: 'var(--text-primary)',
+        }}>
+          Today's Summary
+        </h2>
+      </div>
 
-      <div className="grid grid-cols-1 md:grid-cols-3 gap-4 mb-6">
-        <div className="bg-gradient-to-br from-blue-50 to-blue-100 rounded-lg p-4">
-          <div className="text-sm text-blue-600 font-medium mb-1">Total Cost</div>
-          <div className="text-2xl font-bold text-blue-900">${totalCost.toFixed(2)}</div>
+      {/* Metrics Grid */}
+      <div style={{
+        display: 'grid',
+        gridTemplateColumns: 'repeat(auto-fit, minmax(150px, 1fr))',
+        gap: 'var(--space-4)',
+        marginBottom: 'var(--space-6)',
+      }}>
+        <div style={{
+          background: 'var(--bg-tertiary)',
+          border: '1px solid var(--bg-border)',
+          borderRadius: 'var(--radius-sm)',
+          padding: 'var(--space-3)',
+        }}>
+          <div style={{
+            fontSize: 'var(--text-xs)',
+            color: 'var(--text-tertiary)',
+            fontFamily: 'var(--font-mono)',
+            textTransform: 'uppercase',
+            letterSpacing: '0.5px',
+            marginBottom: 'var(--space-1)',
+          }}>
+            Total Cost
+          </div>
+          <div style={{
+            fontSize: 'var(--text-2xl)',
+            fontWeight: 600,
+            color: 'var(--accent-primary)',
+            fontFamily: 'var(--font-mono)',
+          }}>
+            ${totalCost.toFixed(2)}
+          </div>
         </div>
 
-        <div className="bg-gradient-to-br from-purple-50 to-purple-100 rounded-lg p-4">
-          <div className="text-sm text-purple-600 font-medium mb-1">Total Tokens</div>
-          <div className="text-2xl font-bold text-purple-900">
+        <div style={{
+          background: 'var(--bg-tertiary)',
+          border: '1px solid var(--bg-border)',
+          borderRadius: 'var(--radius-sm)',
+          padding: 'var(--space-3)',
+        }}>
+          <div style={{
+            fontSize: 'var(--text-xs)',
+            color: 'var(--text-tertiary)',
+            fontFamily: 'var(--font-mono)',
+            textTransform: 'uppercase',
+            letterSpacing: '0.5px',
+            marginBottom: 'var(--space-1)',
+          }}>
+            Total Tokens
+          </div>
+          <div style={{
+            fontSize: 'var(--text-2xl)',
+            fontWeight: 600,
+            color: 'var(--accent-secondary)',
+            fontFamily: 'var(--font-mono)',
+          }}>
             {totalTokens.toLocaleString()}
           </div>
         </div>
 
-        <div className="bg-gradient-to-br from-green-50 to-green-100 rounded-lg p-4">
-          <div className="text-sm text-green-600 font-medium mb-1">Tasks Completed</div>
-          <div className="text-2xl font-bold text-green-900">{tasksToday}</div>
+        <div style={{
+          background: 'var(--bg-tertiary)',
+          border: '1px solid var(--bg-border)',
+          borderRadius: 'var(--radius-sm)',
+          padding: 'var(--space-3)',
+        }}>
+          <div style={{
+            fontSize: 'var(--text-xs)',
+            color: 'var(--text-tertiary)',
+            fontFamily: 'var(--font-mono)',
+            textTransform: 'uppercase',
+            letterSpacing: '0.5px',
+            marginBottom: 'var(--space-1)',
+          }}>
+            Tasks Completed
+          </div>
+          <div style={{
+            fontSize: 'var(--text-2xl)',
+            fontWeight: 600,
+            color: 'var(--accent-success)',
+            fontFamily: 'var(--font-mono)',
+          }}>
+            {tasksToday}
+          </div>
         </div>
       </div>
 
+      {/* By Agent Breakdown */}
       {byAgent.length > 0 && (
         <div>
-          <h3 className="text-sm font-semibold text-gray-700 mb-3">Breakdown by Agent</h3>
-          <div className="space-y-2">
+          <h3 style={{
+            fontSize: 'var(--text-sm)',
+            fontWeight: 500,
+            color: 'var(--text-secondary)',
+            marginBottom: 'var(--space-3)',
+            textTransform: 'uppercase',
+            letterSpacing: '0.5px',
+          }}>
+            Breakdown by Agent
+          </h3>
+          <div style={{
+            display: 'flex',
+            flexDirection: 'column',
+            gap: 'var(--space-2)',
+          }}>
             {byAgent
               .sort((a, b) => b.cost - a.cost)
               .map((agent) => (
                 <div
                   key={agent.id}
-                  className="flex items-center justify-between py-2 px-3 bg-gray-50 rounded-lg"
+                  style={{
+                    display: 'flex',
+                    alignItems: 'center',
+                    justifyContent: 'space-between',
+                    padding: 'var(--space-2) var(--space-3)',
+                    background: 'var(--bg-tertiary)',
+                    border: '1px solid var(--bg-border)',
+                    borderRadius: 'var(--radius-sm)',
+                    transition: 'all var(--transition-fast)',
+                  }}
+                  onMouseEnter={(e) => {
+                    e.currentTarget.style.borderColor = 'var(--accent-primary)';
+                  }}
+                  onMouseLeave={(e) => {
+                    e.currentTarget.style.borderColor = 'var(--bg-border)';
+                  }}
                 >
-                  <div className="flex-1">
-                    <div className="font-medium text-sm text-gray-900">{agent.name}</div>
-                    <div className="text-xs text-gray-500">
+                  <div style={{ flex: 1 }}>
+                    <div style={{
+                      fontFamily: 'var(--font-mono)',
+                      fontSize: 'var(--text-sm)',
+                      color: 'var(--text-primary)',
+                      fontWeight: 500,
+                    }}>
+                      {agent.name}
+                    </div>
+                    <div style={{
+                      fontFamily: 'var(--font-mono)',
+                      fontSize: 'var(--text-xs)',
+                      color: 'var(--text-tertiary)',
+                      marginTop: 'var(--space-1)',
+                    }}>
                       {agent.taskCount} {agent.taskCount === 1 ? "task" : "tasks"} •{" "}
                       {agent.tokens.toLocaleString()} tokens
                     </div>
                   </div>
-                  <div className="font-semibold text-gray-900">${agent.cost.toFixed(2)}</div>
+                  <div style={{
+                    fontFamily: 'var(--font-mono)',
+                    fontSize: 'var(--text-lg)',
+                    fontWeight: 600,
+                    color: 'var(--accent-primary)',
+                  }}>
+                    ${agent.cost.toFixed(2)}
+                  </div>
                 </div>
               ))}
           </div>

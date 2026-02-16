@@ -43,24 +43,32 @@ export function SkillsRegistry({ skills }: SkillsRegistryProps) {
   const getStatusIcon = (status: string) => {
     switch (status) {
       case "installed":
-        return <CheckCircleIcon className="h-5 w-5 text-green-500" />;
+        return <CheckCircleIcon style={{ width: '20px', height: '20px', color: 'var(--accent-success)' }} />;
       case "missing":
-        return <XCircleIcon className="h-5 w-5 text-red-500" />;
+        return <XCircleIcon style={{ width: '20px', height: '20px', color: 'var(--accent-error)' }} />;
       case "error":
-        return <ExclamationCircleIcon className="h-5 w-5 text-yellow-500" />;
+        return <ExclamationCircleIcon style={{ width: '20px', height: '20px', color: 'var(--accent-warning)' }} />;
       default:
         return null;
     }
   };
 
   const getStatusBadge = (status: string) => {
-    const colors = {
-      installed: "bg-green-100 text-green-800",
-      missing: "bg-red-100 text-red-800",
-      error: "bg-yellow-100 text-yellow-800",
+    const styles = {
+      installed: { background: 'rgba(16, 185, 129, 0.1)', color: 'var(--accent-success)' },
+      missing: { background: 'rgba(239, 68, 68, 0.1)', color: 'var(--accent-error)' },
+      error: { background: 'rgba(245, 158, 11, 0.1)', color: 'var(--accent-warning)' },
     };
+    const style = styles[status as keyof typeof styles];
+    
     return (
-      <span className={`px-2 py-1 text-xs font-medium rounded-full ${colors[status as keyof typeof colors]}`}>
+      <span style={{
+        padding: 'var(--space-1) var(--space-2)',
+        fontSize: 'var(--text-xs)',
+        fontWeight: 500,
+        borderRadius: 'var(--radius-sm)',
+        ...style,
+      }}>
         {status}
       </span>
     );
@@ -87,7 +95,6 @@ export function SkillsRegistry({ skills }: SkillsRegistryProps) {
         setSaveStatus({ ...saveStatus, [skillName]: "saved" });
         setEditingSkill(null);
         
-        // Update the skill content in the local state
         const skill = skills.find(s => s.name === skillName);
         if (skill) {
           skill.content = editedContent;
@@ -111,67 +118,164 @@ export function SkillsRegistry({ skills }: SkillsRegistryProps) {
   };
 
   return (
-    <div className="space-y-4">
+    <div style={{ display: 'flex', flexDirection: 'column', gap: 'var(--space-4)' }}>
       {/* Search */}
-      <div className="relative">
-        <MagnifyingGlassIcon className="absolute left-3 top-3 h-5 w-5 text-gray-400" />
+      <div style={{ position: 'relative' }}>
+        <MagnifyingGlassIcon style={{
+          position: 'absolute',
+          left: '12px',
+          top: '12px',
+          width: '20px',
+          height: '20px',
+          color: 'var(--text-tertiary)',
+        }} />
         <input
           type="text"
           placeholder="Search skills..."
           value={searchQuery}
           onChange={(e) => setSearchQuery(e.target.value)}
-          className="w-full pl-10 pr-4 py-2 border border-gray-300 rounded-lg focus:outline-none focus:ring-2 focus:ring-blue-500"
+          style={{
+            width: '100%',
+            paddingLeft: '40px',
+            paddingRight: 'var(--space-4)',
+            paddingTop: 'var(--space-2)',
+            paddingBottom: 'var(--space-2)',
+            background: 'var(--bg-secondary)',
+            border: '1px solid var(--bg-border)',
+            borderRadius: 'var(--radius-sm)',
+            color: 'var(--text-primary)',
+            fontSize: 'var(--text-sm)',
+          }}
         />
       </div>
 
       {/* Stats */}
-      <div className="flex gap-4 text-sm text-gray-600">
+      <div style={{
+        display: 'flex',
+        gap: 'var(--space-4)',
+        fontSize: 'var(--text-sm)',
+        color: 'var(--text-secondary)',
+        fontFamily: 'var(--font-mono)',
+      }}>
         <span>Total: {skills.length}</span>
         <span>Installed: {skills.filter(s => s.status === "installed").length}</span>
         {skills.filter(s => s.status === "error").length > 0 && (
-          <span className="text-yellow-600">
+          <span style={{ color: 'var(--accent-warning)' }}>
             Errors: {skills.filter(s => s.status === "error").length}
           </span>
         )}
       </div>
 
       {/* Skills List */}
-      <div className="space-y-2">
+      <div style={{ display: 'flex', flexDirection: 'column', gap: 'var(--space-2)' }}>
         {filteredSkills.map((skill) => (
-          <div key={skill.path} className="bg-white border border-gray-200 rounded-lg overflow-hidden">
-            <div className="p-4">
-              <div className="flex items-start justify-between gap-4">
-                <div className="flex items-start gap-3 flex-1">
+          <div
+            key={skill.path}
+            style={{
+              background: 'var(--bg-secondary)',
+              border: '1px solid var(--bg-border)',
+              borderRadius: 'var(--radius-md)',
+              overflow: 'hidden',
+            }}
+          >
+            <div style={{ padding: 'var(--space-4)' }}>
+              <div style={{
+                display: 'flex',
+                alignItems: 'flex-start',
+                justifyContent: 'space-between',
+                gap: 'var(--space-4)',
+              }}>
+                <div style={{
+                  display: 'flex',
+                  alignItems: 'flex-start',
+                  gap: 'var(--space-3)',
+                  flex: 1,
+                }}>
                   {getStatusIcon(skill.status)}
-                  <div className="flex-1 min-w-0">
-                    <div className="flex items-center gap-2 mb-1">
-                      <h3 className="font-semibold text-gray-900">{skill.name}</h3>
+                  <div style={{ flex: 1, minWidth: 0 }}>
+                    <div style={{
+                      display: 'flex',
+                      alignItems: 'center',
+                      gap: 'var(--space-2)',
+                      marginBottom: 'var(--space-1)',
+                    }}>
+                      <h3 style={{
+                        fontWeight: 600,
+                        color: 'var(--text-primary)',
+                        fontSize: 'var(--text-base)',
+                      }}>
+                        {skill.name}
+                      </h3>
                       {getStatusBadge(skill.status)}
                       
                       {saveStatus[skill.name] === "saved" && (
-                        <span className="text-xs text-green-600">✓ Saved</span>
+                        <span style={{
+                          fontSize: 'var(--text-xs)',
+                          color: 'var(--accent-success)',
+                        }}>
+                          ✓ Saved
+                        </span>
                       )}
                       {saveStatus[skill.name] === "error" && (
-                        <span className="text-xs text-red-600">✗ Error</span>
+                        <span style={{
+                          fontSize: 'var(--text-xs)',
+                          color: 'var(--accent-error)',
+                        }}>
+                          ✗ Error
+                        </span>
                       )}
                     </div>
-                    <p className="text-sm text-gray-600 mb-2">{skill.description}</p>
-                    <div className="text-xs text-gray-500 font-mono">{skill.path}</div>
+                    <p style={{
+                      fontSize: 'var(--text-sm)',
+                      color: 'var(--text-secondary)',
+                      marginBottom: 'var(--space-2)',
+                    }}>
+                      {skill.description}
+                    </p>
+                    <div style={{
+                      fontSize: 'var(--text-xs)',
+                      color: 'var(--text-tertiary)',
+                      fontFamily: 'var(--font-mono)',
+                    }}>
+                      {skill.path}
+                    </div>
                     
                     {lastModified[skill.name] && (
-                      <div className="text-xs text-gray-400 mt-1">
+                      <div style={{
+                        fontSize: 'var(--text-xs)',
+                        color: 'var(--text-tertiary)',
+                        marginTop: 'var(--space-1)',
+                      }}>
                         Last modified: {new Date(lastModified[skill.name]).toLocaleString()}
                       </div>
                     )}
                     
                     {skill.dependencies && skill.dependencies.length > 0 && (
-                      <div className="mt-2">
-                        <div className="text-xs font-medium text-gray-700 mb-1">Dependencies:</div>
-                        <div className="flex flex-wrap gap-1">
+                      <div style={{ marginTop: 'var(--space-2)' }}>
+                        <div style={{
+                          fontSize: 'var(--text-xs)',
+                          fontWeight: 500,
+                          color: 'var(--text-secondary)',
+                          marginBottom: 'var(--space-1)',
+                        }}>
+                          Dependencies:
+                        </div>
+                        <div style={{
+                          display: 'flex',
+                          flexWrap: 'wrap',
+                          gap: 'var(--space-1)',
+                        }}>
                           {skill.dependencies.map((dep, idx) => (
                             <span
                               key={idx}
-                              className="px-2 py-0.5 text-xs bg-gray-100 text-gray-700 rounded font-mono"
+                              style={{
+                                padding: '2px var(--space-2)',
+                                fontSize: 'var(--text-xs)',
+                                background: 'var(--bg-tertiary)',
+                                color: 'var(--text-secondary)',
+                                borderRadius: 'var(--radius-sm)',
+                                fontFamily: 'var(--font-mono)',
+                              }}
                             >
                               {dep}
                             </span>
@@ -182,26 +286,40 @@ export function SkillsRegistry({ skills }: SkillsRegistryProps) {
                   </div>
                 </div>
 
-                <div className="flex items-center gap-2">
+                <div style={{ display: 'flex', alignItems: 'center', gap: 'var(--space-2)' }}>
                   {skill.content && editingSkill !== skill.name && (
                     <button
                       onClick={() => handleEditSkill(skill.name, skill.content!)}
-                      className="text-blue-600 hover:text-blue-700 transition-colors"
+                      style={{
+                        background: 'transparent',
+                        border: 'none',
+                        color: 'var(--accent-primary)',
+                        cursor: 'pointer',
+                        padding: 0,
+                        transition: 'color var(--transition-fast)',
+                      }}
                       title="Edit skill"
                     >
-                      <PencilIcon className="h-5 w-5" />
+                      <PencilIcon style={{ width: '20px', height: '20px' }} />
                     </button>
                   )}
                   
                   {skill.content && (
                     <button
                       onClick={() => setExpandedSkill(expandedSkill === skill.path ? null : skill.path)}
-                      className="text-gray-400 hover:text-gray-600 transition-colors"
+                      style={{
+                        background: 'transparent',
+                        border: 'none',
+                        color: 'var(--text-tertiary)',
+                        cursor: 'pointer',
+                        padding: 0,
+                        transition: 'color var(--transition-fast)',
+                      }}
                     >
                       {expandedSkill === skill.path ? (
-                        <ChevronUpIcon className="h-5 w-5" />
+                        <ChevronUpIcon style={{ width: '20px', height: '20px' }} />
                       ) : (
-                        <ChevronDownIcon className="h-5 w-5" />
+                        <ChevronDownIcon style={{ width: '20px', height: '20px' }} />
                       )}
                     </button>
                   )}
@@ -210,25 +328,63 @@ export function SkillsRegistry({ skills }: SkillsRegistryProps) {
 
               {/* Expanded Content */}
               {expandedSkill === skill.path && skill.content && (
-                <div className="mt-4 pt-4 border-t border-gray-200">
+                <div style={{
+                  marginTop: 'var(--space-4)',
+                  paddingTop: 'var(--space-4)',
+                  borderTop: '1px solid var(--bg-border)',
+                }}>
                   {editingSkill === skill.name ? (
                     <div>
-                      <div className="flex justify-between items-center mb-2">
-                        <span className="text-sm font-medium text-gray-700">Editing {skill.name}</span>
-                        <div className="flex gap-2">
+                      <div style={{
+                        display: 'flex',
+                        justifyContent: 'space-between',
+                        alignItems: 'center',
+                        marginBottom: 'var(--space-2)',
+                      }}>
+                        <span style={{
+                          fontSize: 'var(--text-sm)',
+                          fontWeight: 500,
+                          color: 'var(--text-secondary)',
+                        }}>
+                          Editing {skill.name}
+                        </span>
+                        <div style={{ display: 'flex', gap: 'var(--space-2)' }}>
                           <button
                             onClick={() => handleSaveSkill(skill.name)}
                             disabled={saveStatus[skill.name] === "saving"}
-                            className="flex items-center gap-1 px-3 py-1 text-sm bg-green-600 text-white rounded hover:bg-green-700 disabled:opacity-50"
+                            style={{
+                              display: 'flex',
+                              alignItems: 'center',
+                              gap: 'var(--space-1)',
+                              padding: 'var(--space-1) var(--space-3)',
+                              fontSize: 'var(--text-sm)',
+                              background: 'var(--accent-success)',
+                              color: 'white',
+                              border: 'none',
+                              borderRadius: 'var(--radius-sm)',
+                              cursor: saveStatus[skill.name] === "saving" ? 'not-allowed' : 'pointer',
+                              opacity: saveStatus[skill.name] === "saving" ? 0.5 : 1,
+                            }}
                           >
-                            <CheckIcon className="w-4 h-4" />
+                            <CheckIcon style={{ width: '16px', height: '16px' }} />
                             {saveStatus[skill.name] === "saving" ? "Saving..." : "Save"}
                           </button>
                           <button
                             onClick={() => handleCancelEdit(skill.name)}
-                            className="flex items-center gap-1 px-3 py-1 text-sm bg-gray-600 text-white rounded hover:bg-gray-700"
+                            style={{
+                              display: 'flex',
+                              alignItems: 'center',
+                              gap: 'var(--space-1)',
+                              padding: 'var(--space-1) var(--space-3)',
+                              fontSize: 'var(--text-sm)',
+                              background: 'var(--bg-tertiary)',
+                              color: 'var(--text-primary)',
+                              border: '1px solid var(--bg-border)',
+                              borderRadius: 'var(--radius-sm)',
+                              cursor: 'pointer',
+                            }}
                           >
-                            <XMarkIcon className="w-4 h-4" />
+                            <XMarkIcon style={{ width: '16px', height: '16px' }} />
                             Cancel
                           </button>
                         </div>
@@ -236,11 +392,32 @@ export function SkillsRegistry({ skills }: SkillsRegistryProps) {
                       <textarea
                         value={editedContent}
                         onChange={(e) => setEditedContent(e.target.value)}
-                        className="w-full h-96 p-4 text-xs font-mono bg-gray-50 border border-gray-300 rounded-lg focus:outline-none focus:ring-2 focus:ring-blue-500"
+                        style={{
+                          width: '100%',
+                          height: '400px',
+                          padding: 'var(--space-4)',
+                          fontSize: 'var(--text-xs)',
+                          fontFamily: 'var(--font-mono)',
+                          background: 'var(--bg-primary)',
+                          border: '1px solid var(--bg-border)',
+                          borderRadius: 'var(--radius-sm)',
+                          color: 'var(--text-primary)',
+                          resize: 'vertical',
+                        }}
                       />
                     </div>
                   ) : (
-                    <pre className="text-xs bg-gray-50 p-4 rounded-lg overflow-x-auto whitespace-pre-wrap">
+                    <pre style={{
+                      fontSize: 'var(--text-xs)',
+                      background: 'var(--bg-primary)',
+                      padding: 'var(--space-4)',
+                      borderRadius: 'var(--radius-sm)',
+                      overflowX: 'auto',
+                      whiteSpace: 'pre-wrap',
+                      color: 'var(--text-secondary)',
+                      fontFamily: 'var(--font-mono)',
+                      border: '1px solid var(--bg-border)',
+                    }}>
                       {skill.content}
                     </pre>
                   )}
@@ -251,7 +428,12 @@ export function SkillsRegistry({ skills }: SkillsRegistryProps) {
         ))}
 
         {filteredSkills.length === 0 && (
-          <div className="text-center py-12 text-gray-500">
+          <div style={{
+            textAlign: 'center',
+            padding: 'var(--space-12)',
+            color: 'var(--text-tertiary)',
+            fontSize: 'var(--text-sm)',
+          }}>
             No skills found matching &quot;{searchQuery}&quot;
           </div>
         )}

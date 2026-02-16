@@ -68,51 +68,85 @@ export function CronJobs({ crons, onRefresh }: CronJobsProps) {
   const getStatusIcon = (status: string) => {
     switch (status) {
       case "ok":
-        return <CheckCircleIcon className="h-5 w-5 text-green-500" />;
+        return <CheckCircleIcon style={{ width: '20px', height: '20px', color: 'var(--accent-success)' }} />;
       case "error":
-        return <ExclamationCircleIcon className="h-5 w-5 text-red-500" />;
+        return <ExclamationCircleIcon style={{ width: '20px', height: '20px', color: 'var(--accent-error)' }} />;
       case "idle":
-        return <MinusCircleIcon className="h-5 w-5 text-gray-400" />;
+        return <MinusCircleIcon style={{ width: '20px', height: '20px', color: 'var(--text-tertiary)' }} />;
       default:
-        return <ClockIcon className="h-5 w-5 text-gray-400" />;
+        return <ClockIcon style={{ width: '20px', height: '20px', color: 'var(--text-tertiary)' }} />;
     }
   };
 
   const getStatusBadge = (status: string) => {
-    const colors = {
-      ok: "bg-green-100 text-green-800",
-      error: "bg-red-100 text-red-800",
-      idle: "bg-gray-100 text-gray-600",
+    const styles = {
+      ok: { background: 'rgba(16, 185, 129, 0.1)', color: 'var(--accent-success)' },
+      error: { background: 'rgba(239, 68, 68, 0.1)', color: 'var(--accent-error)' },
+      idle: { background: 'var(--bg-tertiary)', color: 'var(--text-secondary)' },
     };
+    const style = styles[status as keyof typeof styles] || { background: 'var(--bg-tertiary)', color: 'var(--text-secondary)' };
+    
     return (
-      <span className={`px-2 py-1 text-xs font-medium rounded-full ${colors[status as keyof typeof colors] || 'bg-gray-100 text-gray-600'}`}>
+      <span style={{
+        padding: 'var(--space-1) var(--space-2)',
+        fontSize: 'var(--text-xs)',
+        fontWeight: 500,
+        borderRadius: 'var(--radius-sm)',
+        ...style,
+      }}>
         {status}
       </span>
     );
   };
 
   return (
-    <div className="space-y-4">
+    <div style={{ display: 'flex', flexDirection: 'column', gap: 'var(--space-4)' }}>
       {/* Search and Filter */}
-      <div className="flex flex-col sm:flex-row gap-3">
+      <div style={{
+        display: 'flex',
+        flexDirection: 'column',
+        gap: 'var(--space-3)',
+      }}>
+        <style jsx>{`
+          @media (min-width: 640px) {
+            div {
+              flex-direction: row;
+            }
+          }
+        `}</style>
+        
         <input
           type="text"
           placeholder="Search cron jobs..."
           value={searchQuery}
           onChange={(e) => setSearchQuery(e.target.value)}
-          className="flex-1 px-4 py-2 border border-gray-300 rounded-lg focus:outline-none focus:ring-2 focus:ring-blue-500"
+          style={{
+            flex: 1,
+            padding: 'var(--space-2) var(--space-4)',
+            background: 'var(--bg-secondary)',
+            border: '1px solid var(--bg-border)',
+            borderRadius: 'var(--radius-sm)',
+            color: 'var(--text-primary)',
+            fontSize: 'var(--text-sm)',
+          }}
         />
         
-        <div className="flex gap-2">
-          {["all", "ok", "error", "idle"].map((status) => (
+        <div style={{ display: 'flex', gap: 'var(--space-2)' }}>
+          {(["all", "ok", "error", "idle"] as const).map((status) => (
             <button
               key={status}
-              onClick={() => setFilterStatus(status as typeof filterStatus)}
-              className={`px-3 py-2 text-xs rounded-lg transition-colors ${
-                filterStatus === status
-                  ? "bg-blue-100 text-blue-700 font-medium"
-                  : "bg-gray-100 text-gray-600 hover:bg-gray-200"
-              }`}
+              onClick={() => setFilterStatus(status)}
+              style={{
+                padding: 'var(--space-2) var(--space-3)',
+                fontSize: 'var(--text-xs)',
+                borderRadius: 'var(--radius-sm)',
+                border: 'none',
+                cursor: 'pointer',
+                fontWeight: filterStatus === status ? 500 : 400,
+                background: filterStatus === status ? 'rgba(0, 212, 255, 0.1)' : 'var(--bg-tertiary)',
+                color: filterStatus === status ? 'var(--accent-primary)' : 'var(--text-secondary)',
+                transition: 'all var(--transition-fast)',
+              }}
             >
               {status === "all" ? "All" : status}
             </button>
@@ -121,91 +155,250 @@ export function CronJobs({ crons, onRefresh }: CronJobsProps) {
       </div>
 
       {/* Stats */}
-      <div className="flex gap-4 text-sm text-gray-600">
-        <span>Total: {crons.length}</span>
-        <span className="text-green-600">OK: {crons.filter(c => c.status === "ok").length}</span>
-        <span className="text-red-600">Errors: {crons.filter(c => c.status === "error").length}</span>
-        <span>Idle: {crons.filter(c => c.status === "idle").length}</span>
+      <div style={{
+        display: 'flex',
+        gap: 'var(--space-4)',
+        fontSize: 'var(--text-sm)',
+        fontFamily: 'var(--font-mono)',
+      }}>
+        <span style={{ color: 'var(--text-secondary)' }}>Total: {crons.length}</span>
+        <span style={{ color: 'var(--accent-success)' }}>OK: {crons.filter(c => c.status === "ok").length}</span>
+        <span style={{ color: 'var(--accent-error)' }}>Errors: {crons.filter(c => c.status === "error").length}</span>
+        <span style={{ color: 'var(--text-secondary)' }}>Idle: {crons.filter(c => c.status === "idle").length}</span>
       </div>
 
       {/* Cron Jobs Table */}
-      <div className="bg-white border border-gray-200 rounded-lg overflow-hidden">
-        <div className="overflow-x-auto">
-          <table className="min-w-full divide-y divide-gray-200">
-            <thead className="bg-gray-50">
-              <tr>
-                <th className="px-6 py-3 text-left text-xs font-medium text-gray-500 uppercase tracking-wider">
+      <div style={{
+        background: 'var(--bg-secondary)',
+        border: '1px solid var(--bg-border)',
+        borderRadius: 'var(--radius-md)',
+        overflow: 'hidden',
+      }}>
+        <div style={{ overflowX: 'auto' }}>
+          <table style={{
+            width: '100%',
+            borderCollapse: 'collapse',
+            fontFamily: 'var(--font-mono)',
+          }}>
+            <thead>
+              <tr style={{ borderBottom: '1px solid var(--bg-border)' }}>
+                <th style={{
+                  padding: 'var(--space-2) var(--space-3)',
+                  textAlign: 'left',
+                  fontFamily: 'var(--font-sans)',
+                  fontSize: 'var(--text-xs)',
+                  fontWeight: 500,
+                  color: 'var(--text-tertiary)',
+                  textTransform: 'uppercase',
+                  letterSpacing: '0.5px',
+                }}>
                   Status
                 </th>
-                <th className="px-6 py-3 text-left text-xs font-medium text-gray-500 uppercase tracking-wider">
+                <th style={{
+                  padding: 'var(--space-2) var(--space-3)',
+                  textAlign: 'left',
+                  fontFamily: 'var(--font-sans)',
+                  fontSize: 'var(--text-xs)',
+                  fontWeight: 500,
+                  color: 'var(--text-tertiary)',
+                  textTransform: 'uppercase',
+                  letterSpacing: '0.5px',
+                }}>
                   Name
                 </th>
-                <th className="px-6 py-3 text-left text-xs font-medium text-gray-500 uppercase tracking-wider">
+                <th style={{
+                  padding: 'var(--space-2) var(--space-3)',
+                  textAlign: 'left',
+                  fontFamily: 'var(--font-sans)',
+                  fontSize: 'var(--text-xs)',
+                  fontWeight: 500,
+                  color: 'var(--text-tertiary)',
+                  textTransform: 'uppercase',
+                  letterSpacing: '0.5px',
+                }}>
                   Schedule
                 </th>
-                <th className="px-6 py-3 text-left text-xs font-medium text-gray-500 uppercase tracking-wider">
+                <th style={{
+                  padding: 'var(--space-2) var(--space-3)',
+                  textAlign: 'left',
+                  fontFamily: 'var(--font-sans)',
+                  fontSize: 'var(--text-xs)',
+                  fontWeight: 500,
+                  color: 'var(--text-tertiary)',
+                  textTransform: 'uppercase',
+                  letterSpacing: '0.5px',
+                }}>
                   Next Run
                 </th>
-                <th className="px-6 py-3 text-left text-xs font-medium text-gray-500 uppercase tracking-wider">
+                <th style={{
+                  padding: 'var(--space-2) var(--space-3)',
+                  textAlign: 'left',
+                  fontFamily: 'var(--font-sans)',
+                  fontSize: 'var(--text-xs)',
+                  fontWeight: 500,
+                  color: 'var(--text-tertiary)',
+                  textTransform: 'uppercase',
+                  letterSpacing: '0.5px',
+                }}>
                   Last Run
                 </th>
-                <th className="px-6 py-3 text-left text-xs font-medium text-gray-500 uppercase tracking-wider">
+                <th style={{
+                  padding: 'var(--space-2) var(--space-3)',
+                  textAlign: 'left',
+                  fontFamily: 'var(--font-sans)',
+                  fontSize: 'var(--text-xs)',
+                  fontWeight: 500,
+                  color: 'var(--text-tertiary)',
+                  textTransform: 'uppercase',
+                  letterSpacing: '0.5px',
+                }}>
                   Target
                 </th>
-                <th className="px-6 py-3 text-right text-xs font-medium text-gray-500 uppercase tracking-wider">
+                <th style={{
+                  padding: 'var(--space-2) var(--space-3)',
+                  textAlign: 'right',
+                  fontFamily: 'var(--font-sans)',
+                  fontSize: 'var(--text-xs)',
+                  fontWeight: 500,
+                  color: 'var(--text-tertiary)',
+                  textTransform: 'uppercase',
+                  letterSpacing: '0.5px',
+                }}>
                   Actions
                 </th>
               </tr>
             </thead>
-            <tbody className="bg-white divide-y divide-gray-200">
+            <tbody>
               {filteredCrons.map((cron) => (
-                <tr key={cron.id} className="hover:bg-gray-50">
-                  <td className="px-6 py-4 whitespace-nowrap">
-                    <div className="flex items-center gap-2">
+                <tr
+                  key={cron.id}
+                  style={{
+                    borderBottom: '1px solid var(--bg-border)',
+                    transition: 'background var(--transition-fast)',
+                  }}
+                  onMouseEnter={(e) => {
+                    e.currentTarget.style.background = 'var(--bg-tertiary)';
+                  }}
+                  onMouseLeave={(e) => {
+                    e.currentTarget.style.background = 'transparent';
+                  }}
+                >
+                  <td style={{
+                    padding: 'var(--space-2) var(--space-3)',
+                    whiteSpace: 'nowrap',
+                  }}>
+                    <div style={{ display: 'flex', alignItems: 'center', gap: 'var(--space-2)' }}>
                       {getStatusIcon(cron.status)}
                       {getStatusBadge(cron.status)}
                     </div>
                   </td>
-                  <td className="px-6 py-4">
-                    <div className="text-sm font-medium text-gray-900">{cron.name}</div>
-                    <div className="text-xs text-gray-500 font-mono">{cron.id}</div>
+                  <td style={{ padding: 'var(--space-2) var(--space-3)' }}>
+                    <div style={{
+                      fontSize: 'var(--text-sm)',
+                      fontWeight: 500,
+                      color: 'var(--text-primary)',
+                    }}>
+                      {cron.name}
+                    </div>
+                    <div style={{
+                      fontSize: 'var(--text-xs)',
+                      color: 'var(--text-tertiary)',
+                      marginTop: '2px',
+                    }}>
+                      {cron.id}
+                    </div>
                   </td>
-                  <td className="px-6 py-4">
-                    <div className="text-sm text-gray-600 font-mono">{cron.schedule}</div>
+                  <td style={{ padding: 'var(--space-2) var(--space-3)' }}>
+                    <div style={{
+                      fontSize: 'var(--text-sm)',
+                      color: 'var(--text-secondary)',
+                    }}>
+                      {cron.schedule}
+                    </div>
                   </td>
-                  <td className="px-6 py-4 whitespace-nowrap">
-                    <div className="text-sm text-gray-900">{cron.nextRun}</div>
+                  <td style={{
+                    padding: 'var(--space-2) var(--space-3)',
+                    whiteSpace: 'nowrap',
+                  }}>
+                    <div style={{
+                      fontSize: 'var(--text-sm)',
+                      color: 'var(--text-primary)',
+                    }}>
+                      {cron.nextRun}
+                    </div>
                   </td>
-                  <td className="px-6 py-4 whitespace-nowrap">
-                    <div className="text-sm text-gray-600">{cron.lastRun}</div>
+                  <td style={{
+                    padding: 'var(--space-2) var(--space-3)',
+                    whiteSpace: 'nowrap',
+                  }}>
+                    <div style={{
+                      fontSize: 'var(--text-sm)',
+                      color: 'var(--text-secondary)',
+                    }}>
+                      {cron.lastRun}
+                    </div>
                   </td>
-                  <td className="px-6 py-4 whitespace-nowrap">
-                    <span className="px-2 py-1 text-xs bg-purple-100 text-purple-800 rounded">
+                  <td style={{
+                    padding: 'var(--space-2) var(--space-3)',
+                    whiteSpace: 'nowrap',
+                  }}>
+                    <span style={{
+                      padding: 'var(--space-1) var(--space-2)',
+                      fontSize: 'var(--text-xs)',
+                      background: 'rgba(124, 58, 237, 0.1)',
+                      color: 'var(--accent-secondary)',
+                      borderRadius: 'var(--radius-sm)',
+                    }}>
                       {cron.target}
                     </span>
                   </td>
-                  <td className="px-6 py-4 whitespace-nowrap text-right">
+                  <td style={{
+                    padding: 'var(--space-2) var(--space-3)',
+                    whiteSpace: 'nowrap',
+                    textAlign: 'right',
+                  }}>
                     <button
                       onClick={() => handleRunNow(cron.id, cron.name)}
                       disabled={runningJobs.has(cron.id)}
-                      className={`inline-flex items-center gap-2 px-3 py-1 text-sm font-medium rounded-lg transition-colors ${
-                        runningJobs.has(cron.id)
-                          ? "bg-gray-100 text-gray-400 cursor-not-allowed"
-                          : "bg-blue-100 text-blue-700 hover:bg-blue-200"
-                      }`}
+                      style={{
+                        display: 'inline-flex',
+                        alignItems: 'center',
+                        gap: 'var(--space-2)',
+                        padding: 'var(--space-1) var(--space-3)',
+                        fontSize: 'var(--text-sm)',
+                        fontWeight: 500,
+                        borderRadius: 'var(--radius-sm)',
+                        border: 'none',
+                        cursor: runningJobs.has(cron.id) ? 'not-allowed' : 'pointer',
+                        background: runningJobs.has(cron.id) ? 'var(--bg-tertiary)' : 'rgba(0, 212, 255, 0.1)',
+                        color: runningJobs.has(cron.id) ? 'var(--text-tertiary)' : 'var(--accent-primary)',
+                        transition: 'all var(--transition-fast)',
+                      }}
                     >
                       {runningJobs.has(cron.id) ? (
                         <>
-                          <div className="animate-spin rounded-full h-3 w-3 border-b-2 border-blue-600" />
+                          <div style={{
+                            width: '12px',
+                            height: '12px',
+                            border: '2px solid var(--bg-border)',
+                            borderTopColor: 'var(--accent-primary)',
+                            borderRadius: '50%',
+                            animation: 'spin 1s linear infinite',
+                          }} />
                           Running...
                         </>
                       ) : (
                         <>
-                          <PlayIcon className="h-4 w-4" />
+                          <PlayIcon style={{ width: '16px', height: '16px' }} />
                           Run Now
                         </>
                       )}
                     </button>
+                    <style jsx>{`
+                      @keyframes spin {
+                        to { transform: rotate(360deg); }
+                      }
+                    `}</style>
                   </td>
                 </tr>
               ))}
@@ -214,7 +407,12 @@ export function CronJobs({ crons, onRefresh }: CronJobsProps) {
         </div>
 
         {filteredCrons.length === 0 && (
-          <div className="text-center py-12 text-gray-500">
+          <div style={{
+            textAlign: 'center',
+            padding: 'var(--space-12)',
+            color: 'var(--text-tertiary)',
+            fontSize: 'var(--text-sm)',
+          }}>
             No cron jobs found
           </div>
         )}

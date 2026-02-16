@@ -69,33 +69,83 @@ export function ContextViewer({ files }: ContextViewerProps) {
   };
 
   return (
-    <div className="grid grid-cols-1 lg:grid-cols-3 gap-4 h-[calc(100vh-12rem)]">
+    <div style={{
+      display: 'grid',
+      gridTemplateColumns: '1fr',
+      gap: 'var(--space-4)',
+      height: 'calc(100vh - 12rem)',
+    }}>
+      <style jsx>{`
+        @media (min-width: 1024px) {
+          div {
+            grid-template-columns: 1fr 2fr;
+          }
+        }
+      `}</style>
+      
       {/* File Browser */}
-      <div className="lg:col-span-1 bg-white border border-gray-200 rounded-lg overflow-hidden flex flex-col">
-        <div className="p-4 border-b border-gray-200 space-y-3">
+      <div style={{
+        background: 'var(--bg-secondary)',
+        border: '1px solid var(--bg-border)',
+        borderRadius: 'var(--radius-md)',
+        overflow: 'hidden',
+        display: 'flex',
+        flexDirection: 'column',
+      }}>
+        <div style={{
+          padding: 'var(--space-4)',
+          borderBottom: '1px solid var(--bg-border)',
+          display: 'flex',
+          flexDirection: 'column',
+          gap: 'var(--space-3)',
+        }}>
           {/* Search */}
-          <div className="relative">
-            <MagnifyingGlassIcon className="absolute left-3 top-2.5 h-5 w-5 text-gray-400" />
+          <div style={{ position: 'relative' }}>
+            <MagnifyingGlassIcon style={{
+              position: 'absolute',
+              left: '12px',
+              top: '10px',
+              width: '20px',
+              height: '20px',
+              color: 'var(--text-tertiary)',
+            }} />
             <input
               type="text"
               placeholder="Search files..."
               value={searchQuery}
               onChange={(e) => setSearchQuery(e.target.value)}
-              className="w-full pl-10 pr-4 py-2 border border-gray-300 rounded-lg text-sm focus:outline-none focus:ring-2 focus:ring-blue-500"
+              style={{
+                width: '100%',
+                paddingLeft: '40px',
+                paddingRight: 'var(--space-4)',
+                paddingTop: 'var(--space-2)',
+                paddingBottom: 'var(--space-2)',
+                background: 'var(--bg-primary)',
+                border: '1px solid var(--bg-border)',
+                borderRadius: 'var(--radius-sm)',
+                fontSize: 'var(--text-sm)',
+                color: 'var(--text-primary)',
+              }}
             />
           </div>
 
           {/* Filter */}
-          <div className="flex gap-2">
-            {["all", "core", "memory"].map((type) => (
+          <div style={{ display: 'flex', gap: 'var(--space-2)' }}>
+            {(["all", "core", "memory"] as const).map((type) => (
               <button
                 key={type}
-                onClick={() => setFilterType(type as typeof filterType)}
-                className={`px-3 py-1 text-xs rounded-lg transition-colors ${
-                  filterType === type
-                    ? "bg-blue-100 text-blue-700 font-medium"
-                    : "bg-gray-100 text-gray-600 hover:bg-gray-200"
-                }`}
+                onClick={() => setFilterType(type)}
+                style={{
+                  padding: 'var(--space-1) var(--space-3)',
+                  fontSize: 'var(--text-xs)',
+                  borderRadius: 'var(--radius-sm)',
+                  border: 'none',
+                  cursor: 'pointer',
+                  fontWeight: filterType === type ? 500 : 400,
+                  background: filterType === type ? 'rgba(0, 212, 255, 0.1)' : 'var(--bg-tertiary)',
+                  color: filterType === type ? 'var(--accent-primary)' : 'var(--text-secondary)',
+                  transition: 'all var(--transition-fast)',
+                }}
               >
                 {type === "all" ? "All" : type === "core" ? "Core" : "Memory"}
               </button>
@@ -103,33 +153,81 @@ export function ContextViewer({ files }: ContextViewerProps) {
           </div>
 
           {/* Stats */}
-          <div className="text-xs text-gray-500">
+          <div style={{
+            fontSize: 'var(--text-xs)',
+            color: 'var(--text-tertiary)',
+            fontFamily: 'var(--font-mono)',
+          }}>
             {filteredFiles.length} files
           </div>
         </div>
 
         {/* File List */}
-        <div className="flex-1 overflow-y-auto">
+        <div style={{ flex: 1, overflowY: 'auto' }}>
           {filteredFiles.map((file) => (
             <button
               key={file.path}
               onClick={() => loadFile(file)}
-              className={`w-full text-left p-3 border-b border-gray-100 hover:bg-gray-50 transition-colors ${
-                selectedFile?.path === file.path ? "bg-blue-50" : ""
-              }`}
+              style={{
+                width: '100%',
+                textAlign: 'left',
+                padding: 'var(--space-3)',
+                borderBottom: '1px solid var(--bg-border)',
+                background: selectedFile?.path === file.path ? 'var(--bg-tertiary)' : 'transparent',
+                border: 'none',
+                cursor: 'pointer',
+                transition: 'all var(--transition-fast)',
+              }}
+              onMouseEnter={(e) => {
+                if (selectedFile?.path !== file.path) {
+                  e.currentTarget.style.background = 'var(--bg-tertiary)';
+                }
+              }}
+              onMouseLeave={(e) => {
+                if (selectedFile?.path !== file.path) {
+                  e.currentTarget.style.background = 'transparent';
+                }
+              }}
             >
-              <div className="flex items-start gap-2">
+              <div style={{ display: 'flex', alignItems: 'flex-start', gap: 'var(--space-2)' }}>
                 {file.type === "core" ? (
-                  <DocumentIcon className="h-5 w-5 text-blue-500 flex-shrink-0 mt-0.5" />
+                  <DocumentIcon style={{
+                    width: '20px',
+                    height: '20px',
+                    color: 'var(--accent-info)',
+                    flexShrink: 0,
+                    marginTop: '2px',
+                  }} />
                 ) : (
-                  <FolderIcon className="h-5 w-5 text-gray-400 flex-shrink-0 mt-0.5" />
+                  <FolderIcon style={{
+                    width: '20px',
+                    height: '20px',
+                    color: 'var(--text-tertiary)',
+                    flexShrink: 0,
+                    marginTop: '2px',
+                  }} />
                 )}
-                <div className="flex-1 min-w-0">
-                  <div className="font-medium text-sm text-gray-900 truncate">
+                <div style={{ flex: 1, minWidth: 0 }}>
+                  <div style={{
+                    fontWeight: 500,
+                    fontSize: 'var(--text-sm)',
+                    color: 'var(--text-primary)',
+                    overflow: 'hidden',
+                    textOverflow: 'ellipsis',
+                    whiteSpace: 'nowrap',
+                  }}>
                     {file.name}
                   </div>
-                  <div className="flex items-center gap-2 mt-1 text-xs text-gray-500">
-                    <ClockIcon className="h-3 w-3" />
+                  <div style={{
+                    display: 'flex',
+                    alignItems: 'center',
+                    gap: 'var(--space-2)',
+                    marginTop: 'var(--space-1)',
+                    fontSize: 'var(--text-xs)',
+                    color: 'var(--text-tertiary)',
+                    fontFamily: 'var(--font-mono)',
+                  }}>
+                    <ClockIcon style={{ width: '12px', height: '12px' }} />
                     <span>{formatDate(file.modified)}</span>
                     <span>•</span>
                     <span>{formatFileSize(file.size)}</span>
@@ -140,7 +238,12 @@ export function ContextViewer({ files }: ContextViewerProps) {
           ))}
 
           {filteredFiles.length === 0 && (
-            <div className="p-6 text-center text-gray-500 text-sm">
+            <div style={{
+              padding: 'var(--space-6)',
+              textAlign: 'center',
+              color: 'var(--text-tertiary)',
+              fontSize: 'var(--text-sm)',
+            }}>
               No files found
             </div>
           )}
@@ -148,34 +251,97 @@ export function ContextViewer({ files }: ContextViewerProps) {
       </div>
 
       {/* Preview Pane */}
-      <div className="lg:col-span-2 bg-white border border-gray-200 rounded-lg overflow-hidden flex flex-col">
+      <div style={{
+        background: 'var(--bg-secondary)',
+        border: '1px solid var(--bg-border)',
+        borderRadius: 'var(--radius-md)',
+        overflow: 'hidden',
+        display: 'flex',
+        flexDirection: 'column',
+      }}>
         {selectedFile ? (
           <>
-            <div className="p-4 border-b border-gray-200">
-              <h3 className="font-semibold text-gray-900">{selectedFile.name}</h3>
-              <div className="flex items-center gap-4 mt-1 text-xs text-gray-500">
+            <div style={{
+              padding: 'var(--space-4)',
+              borderBottom: '1px solid var(--bg-border)',
+            }}>
+              <h3 style={{
+                fontWeight: 600,
+                color: 'var(--text-primary)',
+                fontSize: 'var(--text-base)',
+              }}>
+                {selectedFile.name}
+              </h3>
+              <div style={{
+                display: 'flex',
+                alignItems: 'center',
+                gap: 'var(--space-4)',
+                marginTop: 'var(--space-1)',
+                fontSize: 'var(--text-xs)',
+                color: 'var(--text-tertiary)',
+                fontFamily: 'var(--font-mono)',
+              }}>
                 <span>{formatFileSize(selectedFile.size)}</span>
                 <span>Modified {formatDate(selectedFile.modified)}</span>
-                <span className="px-2 py-0.5 bg-gray-100 rounded">{selectedFile.type}</span>
+                <span style={{
+                  padding: '2px var(--space-2)',
+                  background: 'var(--bg-tertiary)',
+                  borderRadius: 'var(--radius-sm)',
+                }}>
+                  {selectedFile.type}
+                </span>
               </div>
             </div>
-            <div className="flex-1 overflow-y-auto p-4">
+            <div style={{ flex: 1, overflowY: 'auto', padding: 'var(--space-4)' }}>
               {loading ? (
-                <div className="flex items-center justify-center h-full">
-                  <div className="animate-spin rounded-full h-8 w-8 border-b-2 border-blue-600" />
+                <div style={{
+                  display: 'flex',
+                  alignItems: 'center',
+                  justifyContent: 'center',
+                  height: '100%',
+                }}>
+                  <div style={{
+                    width: '32px',
+                    height: '32px',
+                    border: '2px solid var(--bg-border)',
+                    borderTopColor: 'var(--accent-primary)',
+                    borderRadius: '50%',
+                    animation: 'spin 1s linear infinite',
+                  }} />
+                  <style jsx>{`
+                    @keyframes spin {
+                      to { transform: rotate(360deg); }
+                    }
+                  `}</style>
                 </div>
               ) : (
-                <pre className="text-sm whitespace-pre-wrap font-mono text-gray-800">
+                <pre style={{
+                  fontSize: 'var(--text-sm)',
+                  whiteSpace: 'pre-wrap',
+                  fontFamily: 'var(--font-mono)',
+                  color: 'var(--text-secondary)',
+                  lineHeight: '1.6',
+                }}>
                   {fileContent}
                 </pre>
               )}
             </div>
           </>
         ) : (
-          <div className="flex items-center justify-center h-full text-gray-400">
-            <div className="text-center">
-              <DocumentIcon className="h-16 w-16 mx-auto mb-4" />
-              <p>Select a file to preview</p>
+          <div style={{
+            display: 'flex',
+            alignItems: 'center',
+            justifyContent: 'center',
+            height: '100%',
+            color: 'var(--text-tertiary)',
+          }}>
+            <div style={{ textAlign: 'center' }}>
+              <DocumentIcon style={{
+                width: '64px',
+                height: '64px',
+                margin: '0 auto var(--space-4)',
+              }} />
+              <p style={{ fontSize: 'var(--text-sm)' }}>Select a file to preview</p>
             </div>
           </div>
         )}

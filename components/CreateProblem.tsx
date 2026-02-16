@@ -77,57 +77,155 @@ export function CreateProblem({ onClose, onCreated }: CreateProblemProps) {
   };
 
   return (
-    <div className="fixed inset-0 bg-black bg-opacity-50 flex items-center justify-center z-50 p-4">
-      <div className="bg-white rounded-lg max-w-2xl w-full max-h-[90vh] overflow-y-auto">
+    <div style={{
+      position: 'fixed',
+      inset: 0,
+      background: 'rgba(0, 0, 0, 0.75)',
+      display: 'flex',
+      alignItems: 'center',
+      justifyContent: 'center',
+      zIndex: 50,
+      padding: 'var(--space-4)',
+    }}>
+      <div style={{
+        background: 'var(--bg-secondary)',
+        border: '1px solid var(--bg-border)',
+        borderRadius: 'var(--radius-md)',
+        maxWidth: '700px',
+        width: '100%',
+        maxHeight: '90vh',
+        overflowY: 'auto',
+      }}>
         {/* Header */}
-        <div className="sticky top-0 bg-white border-b border-gray-200 px-6 py-4 flex items-center justify-between">
-          <h2 className="text-xl font-bold text-gray-900">Create New Problem</h2>
+        <div style={{
+          position: 'sticky',
+          top: 0,
+          background: 'var(--bg-secondary)',
+          borderBottom: '1px solid var(--bg-border)',
+          padding: 'var(--space-4) var(--space-6)',
+          display: 'flex',
+          alignItems: 'center',
+          justifyContent: 'space-between',
+        }}>
+          <h2 style={{
+            fontSize: 'var(--text-xl)',
+            fontWeight: 600,
+            color: 'var(--text-primary)',
+          }}>
+            Create New Problem
+          </h2>
           <button
             onClick={onClose}
-            className="p-2 hover:bg-gray-100 rounded-lg transition-colors"
+            style={{
+              padding: 'var(--space-2)',
+              background: 'transparent',
+              border: 'none',
+              borderRadius: 'var(--radius-sm)',
+              cursor: 'pointer',
+              color: 'var(--text-tertiary)',
+              transition: 'all var(--transition-fast)',
+            }}
+            onMouseEnter={(e) => {
+              e.currentTarget.style.background = 'var(--bg-tertiary)';
+              e.currentTarget.style.color = 'var(--text-primary)';
+            }}
+            onMouseLeave={(e) => {
+              e.currentTarget.style.background = 'transparent';
+              e.currentTarget.style.color = 'var(--text-tertiary)';
+            }}
           >
-            <XMarkIcon className="h-6 w-6 text-gray-500" />
+            <XMarkIcon style={{ width: '24px', height: '24px' }} />
           </button>
         </div>
 
         {/* Form */}
-        <form onSubmit={handleSubmit} className="p-6 space-y-4">
+        <form onSubmit={handleSubmit} style={{
+          padding: 'var(--space-6)',
+          display: 'flex',
+          flexDirection: 'column',
+          gap: 'var(--space-4)',
+        }}>
           <div>
-            <label className="block text-sm font-medium text-gray-700 mb-1">
+            <label style={{
+              display: 'block',
+              fontSize: 'var(--text-sm)',
+              fontWeight: 500,
+              color: 'var(--text-secondary)',
+              marginBottom: 'var(--space-1)',
+            }}>
               Title *
             </label>
             <input
               type="text"
               value={formData.title}
               onChange={(e) => setFormData({ ...formData, title: e.target.value })}
-              className="w-full px-3 py-2 border border-gray-300 rounded-lg focus:outline-none focus:ring-2 focus:ring-blue-500"
               placeholder="Brief title for the problem"
               required
+              style={{
+                width: '100%',
+                padding: 'var(--space-2) var(--space-3)',
+                background: 'var(--bg-primary)',
+                border: '1px solid var(--bg-border)',
+                borderRadius: 'var(--radius-sm)',
+                color: 'var(--text-primary)',
+                fontSize: 'var(--text-sm)',
+              }}
             />
           </div>
 
           <div>
-            <label className="block text-sm font-medium text-gray-700 mb-1">
+            <label style={{
+              display: 'block',
+              fontSize: 'var(--text-sm)',
+              fontWeight: 500,
+              color: 'var(--text-secondary)',
+              marginBottom: 'var(--space-1)',
+            }}>
               Description
             </label>
             <textarea
               value={formData.description}
               onChange={(e) => setFormData({ ...formData, description: e.target.value })}
               rows={4}
-              className="w-full px-3 py-2 border border-gray-300 rounded-lg focus:outline-none focus:ring-2 focus:ring-blue-500"
               placeholder="Detailed description..."
+              style={{
+                width: '100%',
+                padding: 'var(--space-2) var(--space-3)',
+                background: 'var(--bg-primary)',
+                border: '1px solid var(--bg-border)',
+                borderRadius: 'var(--radius-sm)',
+                color: 'var(--text-primary)',
+                fontSize: 'var(--text-sm)',
+                fontFamily: 'var(--font-sans)',
+                resize: 'vertical',
+              }}
             />
           </div>
 
-          <div className="grid grid-cols-2 gap-4">
+          <div style={{ display: 'grid', gridTemplateColumns: '1fr 1fr', gap: 'var(--space-4)' }}>
             <div>
-              <label className="block text-sm font-medium text-gray-700 mb-1">
+              <label style={{
+                display: 'block',
+                fontSize: 'var(--text-sm)',
+                fontWeight: 500,
+                color: 'var(--text-secondary)',
+                marginBottom: 'var(--space-1)',
+              }}>
                 Owner
               </label>
               <select
                 value={formData.owner}
                 onChange={(e) => setFormData({ ...formData, owner: e.target.value })}
-                className="w-full px-3 py-2 border border-gray-300 rounded-lg focus:outline-none focus:ring-2 focus:ring-blue-500"
+                style={{
+                  width: '100%',
+                  padding: 'var(--space-2) var(--space-3)',
+                  background: 'var(--bg-primary)',
+                  border: '1px solid var(--bg-border)',
+                  borderRadius: 'var(--radius-sm)',
+                  color: 'var(--text-primary)',
+                  fontSize: 'var(--text-sm)',
+                  cursor: 'pointer',
+                }}
               >
                 <option value="">None</option>
                 <option value="birju">Birju</option>
@@ -137,13 +235,28 @@ export function CreateProblem({ onClose, onCreated }: CreateProblemProps) {
             </div>
 
             <div>
-              <label className="block text-sm font-medium text-gray-700 mb-1">
+              <label style={{
+                display: 'block',
+                fontSize: 'var(--text-sm)',
+                fontWeight: 500,
+                color: 'var(--text-secondary)',
+                marginBottom: 'var(--space-1)',
+              }}>
                 Assignee
               </label>
               <select
                 value={formData.assignee}
                 onChange={(e) => setFormData({ ...formData, assignee: e.target.value })}
-                className="w-full px-3 py-2 border border-gray-300 rounded-lg focus:outline-none focus:ring-2 focus:ring-blue-500"
+                style={{
+                  width: '100%',
+                  padding: 'var(--space-2) var(--space-3)',
+                  background: 'var(--bg-primary)',
+                  border: '1px solid var(--bg-border)',
+                  borderRadius: 'var(--radius-sm)',
+                  color: 'var(--text-primary)',
+                  fontSize: 'var(--text-sm)',
+                  cursor: 'pointer',
+                }}
               >
                 <option value="">None</option>
                 <option value="birju">Birju</option>
@@ -153,13 +266,28 @@ export function CreateProblem({ onClose, onCreated }: CreateProblemProps) {
           </div>
 
           <div>
-            <label className="block text-sm font-medium text-gray-700 mb-1">
+            <label style={{
+              display: 'block',
+              fontSize: 'var(--text-sm)',
+              fontWeight: 500,
+              color: 'var(--text-secondary)',
+              marginBottom: 'var(--space-1)',
+            }}>
               Priority
             </label>
             <select
               value={formData.priority}
               onChange={(e) => setFormData({ ...formData, priority: parseInt(e.target.value) })}
-              className="w-full px-3 py-2 border border-gray-300 rounded-lg focus:outline-none focus:ring-2 focus:ring-blue-500"
+              style={{
+                width: '100%',
+                padding: 'var(--space-2) var(--space-3)',
+                background: 'var(--bg-primary)',
+                border: '1px solid var(--bg-border)',
+                borderRadius: 'var(--radius-sm)',
+                color: 'var(--text-primary)',
+                fontSize: 'var(--text-sm)',
+                cursor: 'pointer',
+              }}
             >
               <option value="0">Low</option>
               <option value="1">Medium</option>
@@ -168,37 +296,77 @@ export function CreateProblem({ onClose, onCreated }: CreateProblemProps) {
           </div>
 
           <div>
-            <label className="block text-sm font-medium text-gray-700 mb-1">
+            <label style={{
+              display: 'block',
+              fontSize: 'var(--text-sm)',
+              fontWeight: 500,
+              color: 'var(--text-secondary)',
+              marginBottom: 'var(--space-1)',
+            }}>
               Tags
             </label>
-            <div className="flex gap-2 mb-2">
+            <div style={{ display: 'flex', gap: 'var(--space-2)', marginBottom: 'var(--space-2)' }}>
               <input
                 type="text"
                 value={formData.tagInput}
                 onChange={(e) => setFormData({ ...formData, tagInput: e.target.value })}
                 onKeyPress={(e) => e.key === "Enter" && (e.preventDefault(), handleAddTag())}
-                className="flex-1 px-3 py-2 border border-gray-300 rounded-lg focus:outline-none focus:ring-2 focus:ring-blue-500"
                 placeholder="Add tag..."
+                style={{
+                  flex: 1,
+                  padding: 'var(--space-2) var(--space-3)',
+                  background: 'var(--bg-primary)',
+                  border: '1px solid var(--bg-border)',
+                  borderRadius: 'var(--radius-sm)',
+                  color: 'var(--text-primary)',
+                  fontSize: 'var(--text-sm)',
+                }}
               />
               <button
                 type="button"
                 onClick={handleAddTag}
-                className="px-4 py-2 bg-gray-200 text-gray-700 rounded-lg hover:bg-gray-300 transition-colors"
+                style={{
+                  padding: 'var(--space-2) var(--space-4)',
+                  background: 'var(--bg-tertiary)',
+                  color: 'var(--text-primary)',
+                  borderRadius: 'var(--radius-sm)',
+                  border: '1px solid var(--bg-border)',
+                  fontSize: 'var(--text-sm)',
+                  cursor: 'pointer',
+                  transition: 'all var(--transition-fast)',
+                }}
               >
                 Add
               </button>
             </div>
-            <div className="flex flex-wrap gap-2">
+            <div style={{ display: 'flex', flexWrap: 'wrap', gap: 'var(--space-2)' }}>
               {formData.tags.map((tag) => (
                 <span
                   key={tag}
-                  className="px-3 py-1 bg-blue-100 text-blue-700 rounded-full text-sm flex items-center gap-2"
+                  style={{
+                    padding: 'var(--space-1) var(--space-3)',
+                    background: 'rgba(59, 130, 246, 0.1)',
+                    color: 'var(--accent-info)',
+                    borderRadius: 'var(--radius-sm)',
+                    fontSize: 'var(--text-sm)',
+                    display: 'flex',
+                    alignItems: 'center',
+                    gap: 'var(--space-2)',
+                  }}
                 >
                   {tag}
                   <button
                     type="button"
                     onClick={() => handleRemoveTag(tag)}
-                    className="text-blue-500 hover:text-blue-700"
+                    style={{
+                      background: 'transparent',
+                      border: 'none',
+                      color: 'var(--accent-info)',
+                      fontSize: 'var(--text-lg)',
+                      lineHeight: 1,
+                      cursor: 'pointer',
+                      padding: 0,
+                    }}
                   >
                     ×
                   </button>
@@ -208,30 +376,66 @@ export function CreateProblem({ onClose, onCreated }: CreateProblemProps) {
           </div>
 
           <div>
-            <label className="block text-sm font-medium text-gray-700 mb-1">
+            <label style={{
+              display: 'block',
+              fontSize: 'var(--text-sm)',
+              fontWeight: 500,
+              color: 'var(--text-secondary)',
+              marginBottom: 'var(--space-1)',
+            }}>
               Telegram Thread ID (Optional)
             </label>
             <input
               type="text"
               value={formData.telegramThreadId}
               onChange={(e) => setFormData({ ...formData, telegramThreadId: e.target.value })}
-              className="w-full px-3 py-2 border border-gray-300 rounded-lg focus:outline-none focus:ring-2 focus:ring-blue-500"
               placeholder="Link to Telegram thread..."
+              style={{
+                width: '100%',
+                padding: 'var(--space-2) var(--space-3)',
+                background: 'var(--bg-primary)',
+                border: '1px solid var(--bg-border)',
+                borderRadius: 'var(--radius-sm)',
+                color: 'var(--text-primary)',
+                fontSize: 'var(--text-sm)',
+              }}
             />
           </div>
 
-          <div className="flex gap-2 pt-4">
+          <div style={{ display: 'flex', gap: 'var(--space-2)', paddingTop: 'var(--space-4)' }}>
             <button
               type="submit"
               disabled={submitting}
-              className="flex-1 px-4 py-2 bg-blue-600 text-white rounded-lg hover:bg-blue-700 transition-colors disabled:opacity-50 disabled:cursor-not-allowed"
+              style={{
+                flex: 1,
+                padding: 'var(--space-2) var(--space-4)',
+                background: submitting ? 'var(--bg-border)' : 'var(--accent-primary)',
+                color: 'var(--bg-primary)',
+                borderRadius: 'var(--radius-sm)',
+                border: 'none',
+                fontSize: 'var(--text-sm)',
+                fontWeight: 500,
+                cursor: submitting ? 'not-allowed' : 'pointer',
+                transition: 'all var(--transition-fast)',
+                opacity: submitting ? 0.5 : 1,
+              }}
             >
               {submitting ? "Creating..." : "Create Problem"}
             </button>
             <button
               type="button"
               onClick={onClose}
-              className="px-4 py-2 bg-gray-200 text-gray-700 rounded-lg hover:bg-gray-300 transition-colors"
+              style={{
+                padding: 'var(--space-2) var(--space-4)',
+                background: 'var(--bg-tertiary)',
+                color: 'var(--text-primary)',
+                borderRadius: 'var(--radius-sm)',
+                border: '1px solid var(--bg-border)',
+                fontSize: 'var(--text-sm)',
+                fontWeight: 500,
+                cursor: 'pointer',
+                transition: 'all var(--transition-fast)',
+              }}
             >
               Cancel
             </button>

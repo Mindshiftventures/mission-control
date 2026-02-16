@@ -140,10 +140,35 @@ export function ProblemDetail({ problemId, onClose, onUpdated }: ProblemDetailPr
 
   if (loading) {
     return (
-      <div className="fixed inset-0 bg-black bg-opacity-50 flex items-center justify-center z-50">
-        <div className="bg-white rounded-lg p-8">
-          <div className="animate-spin rounded-full h-12 w-12 border-b-2 border-blue-600 mx-auto" />
+      <div style={{
+        position: 'fixed',
+        inset: 0,
+        background: 'rgba(0, 0, 0, 0.75)',
+        display: 'flex',
+        alignItems: 'center',
+        justifyContent: 'center',
+        zIndex: 50,
+      }}>
+        <div style={{
+          background: 'var(--bg-secondary)',
+          borderRadius: 'var(--radius-md)',
+          padding: 'var(--space-8)',
+        }}>
+          <div style={{
+            width: '48px',
+            height: '48px',
+            border: '2px solid var(--bg-border)',
+            borderTopColor: 'var(--accent-primary)',
+            borderRadius: '50%',
+            animation: 'spin 1s linear infinite',
+            margin: '0 auto',
+          }} />
         </div>
+        <style jsx>{`
+          @keyframes spin {
+            to { transform: rotate(360deg); }
+          }
+        `}</style>
       </div>
     );
   }
@@ -151,57 +176,155 @@ export function ProblemDetail({ problemId, onClose, onUpdated }: ProblemDetailPr
   if (!problem) return null;
 
   return (
-    <div className="fixed inset-0 bg-black bg-opacity-50 flex items-center justify-center z-50 p-4">
-      <div className="bg-white rounded-lg max-w-4xl w-full max-h-[90vh] overflow-y-auto">
+    <div style={{
+      position: 'fixed',
+      inset: 0,
+      background: 'rgba(0, 0, 0, 0.75)',
+      display: 'flex',
+      alignItems: 'center',
+      justifyContent: 'center',
+      zIndex: 50,
+      padding: 'var(--space-4)',
+    }}>
+      <div style={{
+        background: 'var(--bg-secondary)',
+        border: '1px solid var(--bg-border)',
+        borderRadius: 'var(--radius-md)',
+        maxWidth: '900px',
+        width: '100%',
+        maxHeight: '90vh',
+        overflowY: 'auto',
+      }}>
         {/* Header */}
-        <div className="sticky top-0 bg-white border-b border-gray-200 px-6 py-4 flex items-center justify-between">
-          <h2 className="text-xl font-bold text-gray-900">Problem Details</h2>
+        <div style={{
+          position: 'sticky',
+          top: 0,
+          background: 'var(--bg-secondary)',
+          borderBottom: '1px solid var(--bg-border)',
+          padding: 'var(--space-4) var(--space-6)',
+          display: 'flex',
+          alignItems: 'center',
+          justifyContent: 'space-between',
+        }}>
+          <h2 style={{
+            fontSize: 'var(--text-xl)',
+            fontWeight: 600,
+            color: 'var(--text-primary)',
+          }}>
+            Problem Details
+          </h2>
           <button
             onClick={onClose}
-            className="p-2 hover:bg-gray-100 rounded-lg transition-colors"
+            style={{
+              padding: 'var(--space-2)',
+              background: 'transparent',
+              border: 'none',
+              borderRadius: 'var(--radius-sm)',
+              cursor: 'pointer',
+              color: 'var(--text-tertiary)',
+              transition: 'all var(--transition-fast)',
+            }}
+            onMouseEnter={(e) => {
+              e.currentTarget.style.background = 'var(--bg-tertiary)';
+              e.currentTarget.style.color = 'var(--text-primary)';
+            }}
+            onMouseLeave={(e) => {
+              e.currentTarget.style.background = 'transparent';
+              e.currentTarget.style.color = 'var(--text-tertiary)';
+            }}
           >
-            <XMarkIcon className="h-6 w-6 text-gray-500" />
+            <XMarkIcon style={{ width: '24px', height: '24px' }} />
           </button>
         </div>
 
         {/* Content */}
-        <div className="p-6 space-y-6">
+        <div style={{
+          padding: 'var(--space-6)',
+          display: 'flex',
+          flexDirection: 'column',
+          gap: 'var(--space-6)',
+        }}>
           {/* Edit Mode */}
           {editing ? (
-            <div className="space-y-4">
+            <div style={{ display: 'flex', flexDirection: 'column', gap: 'var(--space-4)' }}>
               <div>
-                <label className="block text-sm font-medium text-gray-700 mb-1">
+                <label style={{
+                  display: 'block',
+                  fontSize: 'var(--text-sm)',
+                  fontWeight: 500,
+                  color: 'var(--text-secondary)',
+                  marginBottom: 'var(--space-1)',
+                }}>
                   Title
                 </label>
                 <input
                   type="text"
                   value={formData.title}
                   onChange={(e) => setFormData({ ...formData, title: e.target.value })}
-                  className="w-full px-3 py-2 border border-gray-300 rounded-lg focus:outline-none focus:ring-2 focus:ring-blue-500"
+                  style={{
+                    width: '100%',
+                    padding: 'var(--space-2) var(--space-3)',
+                    background: 'var(--bg-primary)',
+                    border: '1px solid var(--bg-border)',
+                    borderRadius: 'var(--radius-sm)',
+                    color: 'var(--text-primary)',
+                    fontSize: 'var(--text-sm)',
+                  }}
                 />
               </div>
 
               <div>
-                <label className="block text-sm font-medium text-gray-700 mb-1">
+                <label style={{
+                  display: 'block',
+                  fontSize: 'var(--text-sm)',
+                  fontWeight: 500,
+                  color: 'var(--text-secondary)',
+                  marginBottom: 'var(--space-1)',
+                }}>
                   Description
                 </label>
                 <textarea
                   value={formData.description || ""}
                   onChange={(e) => setFormData({ ...formData, description: e.target.value })}
                   rows={4}
-                  className="w-full px-3 py-2 border border-gray-300 rounded-lg focus:outline-none focus:ring-2 focus:ring-blue-500"
+                  style={{
+                    width: '100%',
+                    padding: 'var(--space-2) var(--space-3)',
+                    background: 'var(--bg-primary)',
+                    border: '1px solid var(--bg-border)',
+                    borderRadius: 'var(--radius-sm)',
+                    color: 'var(--text-primary)',
+                    fontSize: 'var(--text-sm)',
+                    fontFamily: 'var(--font-sans)',
+                    resize: 'vertical',
+                  }}
                 />
               </div>
 
-              <div className="grid grid-cols-2 gap-4">
+              <div style={{ display: 'grid', gridTemplateColumns: '1fr 1fr', gap: 'var(--space-4)' }}>
                 <div>
-                  <label className="block text-sm font-medium text-gray-700 mb-1">
+                  <label style={{
+                    display: 'block',
+                    fontSize: 'var(--text-sm)',
+                    fontWeight: 500,
+                    color: 'var(--text-secondary)',
+                    marginBottom: 'var(--space-1)',
+                  }}>
                     Status
                   </label>
                   <select
                     value={formData.status}
                     onChange={(e) => setFormData({ ...formData, status: e.target.value })}
-                    className="w-full px-3 py-2 border border-gray-300 rounded-lg focus:outline-none focus:ring-2 focus:ring-blue-500"
+                    style={{
+                      width: '100%',
+                      padding: 'var(--space-2) var(--space-3)',
+                      background: 'var(--bg-primary)',
+                      border: '1px solid var(--bg-border)',
+                      borderRadius: 'var(--radius-sm)',
+                      color: 'var(--text-primary)',
+                      fontSize: 'var(--text-sm)',
+                      cursor: 'pointer',
+                    }}
                   >
                     <option value="backlog">Backlog</option>
                     <option value="planning">Planning</option>
@@ -213,13 +336,28 @@ export function ProblemDetail({ problemId, onClose, onUpdated }: ProblemDetailPr
                 </div>
 
                 <div>
-                  <label className="block text-sm font-medium text-gray-700 mb-1">
+                  <label style={{
+                    display: 'block',
+                    fontSize: 'var(--text-sm)',
+                    fontWeight: 500,
+                    color: 'var(--text-secondary)',
+                    marginBottom: 'var(--space-1)',
+                  }}>
                     Priority
                   </label>
                   <select
                     value={formData.priority}
                     onChange={(e) => setFormData({ ...formData, priority: parseInt(e.target.value) })}
-                    className="w-full px-3 py-2 border border-gray-300 rounded-lg focus:outline-none focus:ring-2 focus:ring-blue-500"
+                    style={{
+                      width: '100%',
+                      padding: 'var(--space-2) var(--space-3)',
+                      background: 'var(--bg-primary)',
+                      border: '1px solid var(--bg-border)',
+                      borderRadius: 'var(--radius-sm)',
+                      color: 'var(--text-primary)',
+                      fontSize: 'var(--text-sm)',
+                      cursor: 'pointer',
+                    }}
                   >
                     <option value="0">Low</option>
                     <option value="1">Medium</option>
@@ -228,13 +366,28 @@ export function ProblemDetail({ problemId, onClose, onUpdated }: ProblemDetailPr
                 </div>
 
                 <div>
-                  <label className="block text-sm font-medium text-gray-700 mb-1">
+                  <label style={{
+                    display: 'block',
+                    fontSize: 'var(--text-sm)',
+                    fontWeight: 500,
+                    color: 'var(--text-secondary)',
+                    marginBottom: 'var(--space-1)',
+                  }}>
                     Owner
                   </label>
                   <select
                     value={formData.owner || ""}
                     onChange={(e) => setFormData({ ...formData, owner: e.target.value })}
-                    className="w-full px-3 py-2 border border-gray-300 rounded-lg focus:outline-none focus:ring-2 focus:ring-blue-500"
+                    style={{
+                      width: '100%',
+                      padding: 'var(--space-2) var(--space-3)',
+                      background: 'var(--bg-primary)',
+                      border: '1px solid var(--bg-border)',
+                      borderRadius: 'var(--radius-sm)',
+                      color: 'var(--text-primary)',
+                      fontSize: 'var(--text-sm)',
+                      cursor: 'pointer',
+                    }}
                   >
                     <option value="">None</option>
                     <option value="birju">Birju</option>
@@ -244,13 +397,28 @@ export function ProblemDetail({ problemId, onClose, onUpdated }: ProblemDetailPr
                 </div>
 
                 <div>
-                  <label className="block text-sm font-medium text-gray-700 mb-1">
+                  <label style={{
+                    display: 'block',
+                    fontSize: 'var(--text-sm)',
+                    fontWeight: 500,
+                    color: 'var(--text-secondary)',
+                    marginBottom: 'var(--space-1)',
+                  }}>
                     Assignee
                   </label>
                   <select
                     value={formData.assignee || ""}
                     onChange={(e) => setFormData({ ...formData, assignee: e.target.value })}
-                    className="w-full px-3 py-2 border border-gray-300 rounded-lg focus:outline-none focus:ring-2 focus:ring-blue-500"
+                    style={{
+                      width: '100%',
+                      padding: 'var(--space-2) var(--space-3)',
+                      background: 'var(--bg-primary)',
+                      border: '1px solid var(--bg-border)',
+                      borderRadius: 'var(--radius-sm)',
+                      color: 'var(--text-primary)',
+                      fontSize: 'var(--text-sm)',
+                      cursor: 'pointer',
+                    }}
                   >
                     <option value="">None</option>
                     <option value="birju">Birju</option>
@@ -259,10 +427,20 @@ export function ProblemDetail({ problemId, onClose, onUpdated }: ProblemDetailPr
                 </div>
               </div>
 
-              <div className="flex gap-2">
+              <div style={{ display: 'flex', gap: 'var(--space-2)' }}>
                 <button
                   onClick={handleSave}
-                  className="px-4 py-2 bg-blue-600 text-white rounded-lg hover:bg-blue-700 transition-colors"
+                  style={{
+                    padding: 'var(--space-2) var(--space-4)',
+                    background: 'var(--accent-primary)',
+                    color: 'var(--bg-primary)',
+                    borderRadius: 'var(--radius-sm)',
+                    border: 'none',
+                    fontSize: 'var(--text-sm)',
+                    fontWeight: 500,
+                    cursor: 'pointer',
+                    transition: 'all var(--transition-fast)',
+                  }}
                 >
                   Save Changes
                 </button>
@@ -271,56 +449,111 @@ export function ProblemDetail({ problemId, onClose, onUpdated }: ProblemDetailPr
                     setEditing(false);
                     setFormData(problem);
                   }}
-                  className="px-4 py-2 bg-gray-200 text-gray-700 rounded-lg hover:bg-gray-300 transition-colors"
+                  style={{
+                    padding: 'var(--space-2) var(--space-4)',
+                    background: 'var(--bg-tertiary)',
+                    color: 'var(--text-primary)',
+                    borderRadius: 'var(--radius-sm)',
+                    border: '1px solid var(--bg-border)',
+                    fontSize: 'var(--text-sm)',
+                    fontWeight: 500,
+                    cursor: 'pointer',
+                    transition: 'all var(--transition-fast)',
+                  }}
                 >
                   Cancel
                 </button>
               </div>
             </div>
           ) : (
-            <div className="space-y-4">
-              <div className="flex items-start justify-between">
-                <div className="flex-1">
-                  <h3 className="text-2xl font-bold text-gray-900 mb-2">{problem.title}</h3>
-                  <p className="text-gray-600">{problem.description}</p>
+            <div style={{ display: 'flex', flexDirection: 'column', gap: 'var(--space-4)' }}>
+              <div style={{ display: 'flex', alignItems: 'flex-start', justifyContent: 'space-between' }}>
+                <div style={{ flex: 1 }}>
+                  <h3 style={{
+                    fontSize: 'var(--text-2xl)',
+                    fontWeight: 600,
+                    color: 'var(--text-primary)',
+                    marginBottom: 'var(--space-2)',
+                  }}>
+                    {problem.title}
+                  </h3>
+                  <p style={{
+                    color: 'var(--text-secondary)',
+                    fontSize: 'var(--text-sm)',
+                  }}>
+                    {problem.description}
+                  </p>
                 </div>
                 <button
                   onClick={() => setEditing(true)}
-                  className="px-4 py-2 bg-blue-600 text-white rounded-lg hover:bg-blue-700 transition-colors ml-4"
+                  style={{
+                    padding: 'var(--space-2) var(--space-4)',
+                    background: 'var(--accent-primary)',
+                    color: 'var(--bg-primary)',
+                    borderRadius: 'var(--radius-sm)',
+                    border: 'none',
+                    fontSize: 'var(--text-sm)',
+                    fontWeight: 500,
+                    cursor: 'pointer',
+                    marginLeft: 'var(--space-4)',
+                    transition: 'all var(--transition-fast)',
+                  }}
                 >
                   Edit
                 </button>
               </div>
 
-              <div className="grid grid-cols-2 gap-4 text-sm">
+              <div style={{
+                display: 'grid',
+                gridTemplateColumns: '1fr 1fr',
+                gap: 'var(--space-4)',
+                fontSize: 'var(--text-sm)',
+              }}>
                 <div>
-                  <span className="font-medium text-gray-700">Status:</span>{" "}
-                  <span className="text-gray-900">{problem.status}</span>
+                  <span style={{ fontWeight: 500, color: 'var(--text-secondary)' }}>Status:</span>{" "}
+                  <span style={{ color: 'var(--text-primary)' }}>{problem.status}</span>
                 </div>
                 <div>
-                  <span className="font-medium text-gray-700">Priority:</span>{" "}
-                  <span className="text-gray-900">
+                  <span style={{ fontWeight: 500, color: 'var(--text-secondary)' }}>Priority:</span>{" "}
+                  <span style={{ color: 'var(--text-primary)' }}>
                     {problem.priority === 0 ? "Low" : problem.priority === 1 ? "Medium" : "High"}
                   </span>
                 </div>
                 <div>
-                  <span className="font-medium text-gray-700">Owner:</span>{" "}
-                  <span className="text-gray-900">{problem.owner || "None"}</span>
+                  <span style={{ fontWeight: 500, color: 'var(--text-secondary)' }}>Owner:</span>{" "}
+                  <span style={{ color: 'var(--text-primary)' }}>{problem.owner || "None"}</span>
                 </div>
                 <div>
-                  <span className="font-medium text-gray-700">Assignee:</span>{" "}
-                  <span className="text-gray-900">{problem.assignee || "None"}</span>
+                  <span style={{ fontWeight: 500, color: 'var(--text-secondary)' }}>Assignee:</span>{" "}
+                  <span style={{ color: 'var(--text-primary)' }}>{problem.assignee || "None"}</span>
                 </div>
               </div>
 
               {problem.tags && problem.tags.length > 0 && (
                 <div>
-                  <span className="font-medium text-gray-700 text-sm">Tags:</span>
-                  <div className="flex flex-wrap gap-2 mt-2">
+                  <span style={{
+                    fontWeight: 500,
+                    color: 'var(--text-secondary)',
+                    fontSize: 'var(--text-sm)',
+                  }}>
+                    Tags:
+                  </span>
+                  <div style={{
+                    display: 'flex',
+                    flexWrap: 'wrap',
+                    gap: 'var(--space-2)',
+                    marginTop: 'var(--space-2)',
+                  }}>
                     {problem.tags.map((tag) => (
                       <span
                         key={tag}
-                        className="px-3 py-1 bg-blue-100 text-blue-700 rounded-full text-sm"
+                        style={{
+                          padding: 'var(--space-1) var(--space-3)',
+                          background: 'rgba(59, 130, 246, 0.1)',
+                          color: 'var(--accent-info)',
+                          borderRadius: 'var(--radius-sm)',
+                          fontSize: 'var(--text-sm)',
+                        }}
                       >
                         {tag}
                       </span>
@@ -333,33 +566,90 @@ export function ProblemDetail({ problemId, onClose, onUpdated }: ProblemDetailPr
 
           {/* Comments */}
           <div>
-            <h4 className="font-semibold text-gray-900 mb-3">Comments ({problem.comments.length})</h4>
-            <div className="space-y-3 mb-4">
+            <h4 style={{
+              fontWeight: 600,
+              color: 'var(--text-primary)',
+              marginBottom: 'var(--space-3)',
+              fontSize: 'var(--text-base)',
+            }}>
+              Comments ({problem.comments.length})
+            </h4>
+            <div style={{
+              display: 'flex',
+              flexDirection: 'column',
+              gap: 'var(--space-3)',
+              marginBottom: 'var(--space-4)',
+            }}>
               {problem.comments.map((comment) => (
-                <div key={comment.id} className="bg-gray-50 rounded-lg p-4">
-                  <div className="flex items-center justify-between mb-2">
-                    <span className="font-medium text-gray-900">{comment.author}</span>
-                    <span className="text-xs text-gray-500">
+                <div
+                  key={comment.id}
+                  style={{
+                    background: 'var(--bg-tertiary)',
+                    borderRadius: 'var(--radius-sm)',
+                    padding: 'var(--space-4)',
+                  }}
+                >
+                  <div style={{
+                    display: 'flex',
+                    alignItems: 'center',
+                    justifyContent: 'space-between',
+                    marginBottom: 'var(--space-2)',
+                  }}>
+                    <span style={{
+                      fontWeight: 500,
+                      color: 'var(--text-primary)',
+                      fontSize: 'var(--text-sm)',
+                    }}>
+                      {comment.author}
+                    </span>
+                    <span style={{
+                      fontSize: 'var(--text-xs)',
+                      color: 'var(--text-tertiary)',
+                      fontFamily: 'var(--font-mono)',
+                    }}>
                       {new Date(comment.createdAt).toLocaleString()}
                     </span>
                   </div>
-                  <p className="text-gray-700">{comment.content}</p>
+                  <p style={{
+                    color: 'var(--text-secondary)',
+                    fontSize: 'var(--text-sm)',
+                  }}>
+                    {comment.content}
+                  </p>
                 </div>
               ))}
             </div>
 
-            <div className="flex gap-2">
+            <div style={{ display: 'flex', gap: 'var(--space-2)' }}>
               <input
                 type="text"
                 value={newComment}
                 onChange={(e) => setNewComment(e.target.value)}
                 placeholder="Add a comment..."
-                className="flex-1 px-3 py-2 border border-gray-300 rounded-lg focus:outline-none focus:ring-2 focus:ring-blue-500"
+                style={{
+                  flex: 1,
+                  padding: 'var(--space-2) var(--space-3)',
+                  background: 'var(--bg-primary)',
+                  border: '1px solid var(--bg-border)',
+                  borderRadius: 'var(--radius-sm)',
+                  color: 'var(--text-primary)',
+                  fontSize: 'var(--text-sm)',
+                }}
                 onKeyPress={(e) => e.key === "Enter" && handleAddComment()}
               />
               <button
                 onClick={handleAddComment}
-                className="px-4 py-2 bg-blue-600 text-white rounded-lg hover:bg-blue-700 transition-colors"
+                style={{
+                  padding: 'var(--space-2) var(--space-4)',
+                  background: 'var(--accent-primary)',
+                  color: 'var(--bg-primary)',
+                  borderRadius: 'var(--radius-sm)',
+                  border: 'none',
+                  fontSize: 'var(--text-sm)',
+                  fontWeight: 500,
+                  cursor: 'pointer',
+                  transition: 'all var(--transition-fast)',
+                }}
               >
                 Add
               </button>
@@ -368,36 +658,84 @@ export function ProblemDetail({ problemId, onClose, onUpdated }: ProblemDetailPr
 
           {/* Attachments */}
           <div>
-            <h4 className="font-semibold text-gray-900 mb-3">Attachments ({problem.attachments.length})</h4>
-            <div className="space-y-2 mb-4">
+            <h4 style={{
+              fontWeight: 600,
+              color: 'var(--text-primary)',
+              marginBottom: 'var(--space-3)',
+              fontSize: 'var(--text-base)',
+            }}>
+              Attachments ({problem.attachments.length})
+            </h4>
+            <div style={{
+              display: 'flex',
+              flexDirection: 'column',
+              gap: 'var(--space-2)',
+              marginBottom: 'var(--space-4)',
+            }}>
               {problem.attachments.map((attachment) => (
                 <a
                   key={attachment.id}
                   href={attachment.url}
                   target="_blank"
                   rel="noopener noreferrer"
-                  className="block bg-gray-50 rounded-lg p-3 hover:bg-gray-100 transition-colors"
+                  style={{
+                    display: 'block',
+                    background: 'var(--bg-tertiary)',
+                    borderRadius: 'var(--radius-sm)',
+                    padding: 'var(--space-3)',
+                    textDecoration: 'none',
+                    transition: 'all var(--transition-fast)',
+                  }}
+                  onMouseEnter={(e) => {
+                    e.currentTarget.style.background = 'var(--bg-border)';
+                  }}
+                  onMouseLeave={(e) => {
+                    e.currentTarget.style.background = 'var(--bg-tertiary)';
+                  }}
                 >
-                  <div className="flex items-center gap-2">
-                    <span className="text-blue-600">🔗</span>
-                    <span className="text-gray-900">{attachment.title || attachment.url}</span>
+                  <div style={{ display: 'flex', alignItems: 'center', gap: 'var(--space-2)' }}>
+                    <span style={{ fontSize: 'var(--text-base)' }}>🔗</span>
+                    <span style={{
+                      color: 'var(--text-primary)',
+                      fontSize: 'var(--text-sm)',
+                    }}>
+                      {attachment.title || attachment.url}
+                    </span>
                   </div>
                 </a>
               ))}
             </div>
 
-            <div className="flex gap-2">
+            <div style={{ display: 'flex', gap: 'var(--space-2)' }}>
               <input
                 type="text"
                 value={newAttachmentUrl}
                 onChange={(e) => setNewAttachmentUrl(e.target.value)}
                 placeholder="Add attachment URL..."
-                className="flex-1 px-3 py-2 border border-gray-300 rounded-lg focus:outline-none focus:ring-2 focus:ring-blue-500"
+                style={{
+                  flex: 1,
+                  padding: 'var(--space-2) var(--space-3)',
+                  background: 'var(--bg-primary)',
+                  border: '1px solid var(--bg-border)',
+                  borderRadius: 'var(--radius-sm)',
+                  color: 'var(--text-primary)',
+                  fontSize: 'var(--text-sm)',
+                }}
                 onKeyPress={(e) => e.key === "Enter" && handleAddAttachment()}
               />
               <button
                 onClick={handleAddAttachment}
-                className="px-4 py-2 bg-blue-600 text-white rounded-lg hover:bg-blue-700 transition-colors"
+                style={{
+                  padding: 'var(--space-2) var(--space-4)',
+                  background: 'var(--accent-primary)',
+                  color: 'var(--bg-primary)',
+                  borderRadius: 'var(--radius-sm)',
+                  border: 'none',
+                  fontSize: 'var(--text-sm)',
+                  fontWeight: 500,
+                  cursor: 'pointer',
+                  transition: 'all var(--transition-fast)',
+                }}
               >
                 Add
               </button>
@@ -406,22 +744,40 @@ export function ProblemDetail({ problemId, onClose, onUpdated }: ProblemDetailPr
 
           {/* Activity Log */}
           <div>
-            <h4 className="font-semibold text-gray-900 mb-3">Activity</h4>
-            <div className="space-y-2">
+            <h4 style={{
+              fontWeight: 600,
+              color: 'var(--text-primary)',
+              marginBottom: 'var(--space-3)',
+              fontSize: 'var(--text-base)',
+            }}>
+              Activity
+            </h4>
+            <div style={{ display: 'flex', flexDirection: 'column', gap: 'var(--space-2)' }}>
               {problem.activity.map((activity) => (
-                <div key={activity.id} className="text-sm text-gray-600">
-                  <span className="font-medium">{activity.action}</span>
+                <div
+                  key={activity.id}
+                  style={{
+                    fontSize: 'var(--text-sm)',
+                    color: 'var(--text-secondary)',
+                  }}
+                >
+                  <span style={{ fontWeight: 500 }}>{activity.action}</span>
                   {activity.oldValue && activity.newValue && (
                     <>
                       {" "}
-                      from <span className="font-medium">{activity.oldValue}</span> to{" "}
-                      <span className="font-medium">{activity.newValue}</span>
+                      from <span style={{ fontWeight: 500 }}>{activity.oldValue}</span> to{" "}
+                      <span style={{ fontWeight: 500 }}>{activity.newValue}</span>
                     </>
                   )}
                   {!activity.oldValue && activity.newValue && (
                     <> - {activity.newValue}</>
                   )}
-                  <span className="text-gray-400 ml-2">
+                  <span style={{
+                    color: 'var(--text-tertiary)',
+                    marginLeft: 'var(--space-2)',
+                    fontFamily: 'var(--font-mono)',
+                    fontSize: 'var(--text-xs)',
+                  }}>
                     {new Date(activity.timestamp).toLocaleString()}
                   </span>
                 </div>

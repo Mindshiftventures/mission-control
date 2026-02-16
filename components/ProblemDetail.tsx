@@ -100,7 +100,7 @@ export function ProblemDetail({ problemId, onClose, onUpdated }: ProblemDetailPr
         method: "POST",
         headers: { "Content-Type": "application/json" },
         body: JSON.stringify({
-          author: "lyra",
+          author: "birju",
           content: newComment,
         }),
       });

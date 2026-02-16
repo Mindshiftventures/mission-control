@@ -60,6 +60,7 @@ export default function ProblemsPage() {
         display: 'flex',
         alignItems: 'center',
         justifyContent: 'center',
+        padding: 'var(--space-4)',
       }}>
         <div style={{ textAlign: 'center' }}>
           <div style={{
@@ -96,7 +97,7 @@ export default function ProblemsPage() {
         display: 'flex',
         alignItems: 'center',
         justifyContent: 'center',
-        padding: 'var(--space-6)',
+        padding: 'var(--space-4)',
       }}>
         <div style={{
           background: 'var(--bg-secondary)',
@@ -104,6 +105,7 @@ export default function ProblemsPage() {
           borderRadius: 'var(--radius-md)',
           padding: 'var(--space-6)',
           maxWidth: '500px',
+          width: '100%',
         }}>
           <h2 style={{
             color: 'var(--accent-error)',
@@ -142,7 +144,12 @@ export default function ProblemsPage() {
   }
 
   return (
-    <div style={{ minHeight: '100vh', background: 'var(--bg-primary)' }}>
+    <div style={{ 
+      minHeight: '100vh', 
+      background: 'var(--bg-primary)',
+      width: '100%',
+      overflowX: 'hidden',
+    }}>
       {/* Header */}
       <header style={{
         background: 'var(--bg-secondary)',
@@ -150,11 +157,11 @@ export default function ProblemsPage() {
         position: 'sticky',
         top: 0,
         zIndex: 10,
+        width: '100%',
       }}>
         <div style={{
-          maxWidth: '100%',
-          margin: '0 auto',
           padding: 'var(--space-4) var(--space-6)',
+          maxWidth: '100%',
         }}>
           <div style={{
             display: 'flex',
@@ -185,6 +192,7 @@ export default function ProblemsPage() {
               display: 'flex',
               alignItems: 'center',
               gap: 'var(--space-3)',
+              flexWrap: 'wrap',
             }}>
               {/* Filter Dropdown */}
               <select
@@ -236,9 +244,9 @@ export default function ProblemsPage() {
 
       {/* Main Content */}
       <main style={{
+        padding: 'var(--space-4) var(--space-6)',
         maxWidth: '100%',
-        margin: '0 auto',
-        padding: 'var(--space-6)',
+        width: '100%',
       }}>
         <ProblemsKanban
           problems={problems}

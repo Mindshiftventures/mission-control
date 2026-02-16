@@ -31,8 +31,21 @@ export default function RootLayout({
       </head>
       <body className={inter.className}>
         <Navigation />
-        <div className="lg:pl-16">
-          {children}
+        {/* Responsive content wrapper - properly accounts for sidebar */}
+        <div style={{
+          marginLeft: '0',
+          width: '100%',
+          minHeight: '100vh',
+          overflowX: 'hidden',
+        }}
+        className="lg:ml-16">
+          <div style={{
+            maxWidth: '100%',
+            width: '100%',
+            margin: '0 auto',
+          }}>
+            {children}
+          </div>
         </div>
       </body>
     </html>

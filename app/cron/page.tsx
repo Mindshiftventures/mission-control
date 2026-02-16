@@ -48,6 +48,7 @@ export default function CronPage() {
         display: 'flex',
         alignItems: 'center',
         justifyContent: 'center',
+        padding: 'var(--space-4)',
       }}>
         <div style={{ textAlign: 'center' }}>
           <div style={{
@@ -84,14 +85,15 @@ export default function CronPage() {
         display: 'flex',
         alignItems: 'center',
         justifyContent: 'center',
-        padding: 'var(--space-6)',
+        padding: 'var(--space-4)',
       }}>
         <div style={{
           background: 'var(--bg-secondary)',
           border: '1px solid var(--accent-error)',
           borderRadius: 'var(--radius-md)',
           padding: 'var(--space-6)',
-          maxWidth: '100%',
+          maxWidth: '500px',
+          width: '100%',
         }}>
           <h2 style={{
             color: 'var(--accent-error)',
@@ -130,23 +132,30 @@ export default function CronPage() {
   }
 
   return (
-    <div style={{ minHeight: '100vh', background: 'var(--bg-primary)' }}>
+    <div style={{ 
+      minHeight: '100vh', 
+      background: 'var(--bg-primary)',
+      width: '100%',
+      overflowX: 'hidden',
+    }}>
       <header style={{
         background: 'var(--bg-secondary)',
         borderBottom: '1px solid var(--bg-border)',
         position: 'sticky',
         top: 0,
         zIndex: 10,
+        width: '100%',
       }}>
         <div style={{
-          maxWidth: '100%',
-          margin: '0 auto',
           padding: 'var(--space-4) var(--space-6)',
+          maxWidth: '100%',
         }}>
           <div style={{
             display: 'flex',
             alignItems: 'center',
             justifyContent: 'space-between',
+            flexWrap: 'wrap',
+            gap: 'var(--space-3)',
           }}>
             <div>
               <h1 style={{
@@ -185,9 +194,9 @@ export default function CronPage() {
       </header>
 
       <main style={{
+        padding: 'var(--space-4) var(--space-6)',
         maxWidth: '100%',
-        margin: '0 auto',
-        padding: 'var(--space-6)',
+        width: '100%',
       }}>
         <CronJobs crons={crons} onRefresh={fetchCrons} />
       </main>

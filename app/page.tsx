@@ -71,6 +71,7 @@ export default function DashboardPage() {
         display: 'flex',
         alignItems: 'center',
         justifyContent: 'center',
+        padding: 'var(--space-4)',
       }}>
         <div style={{ textAlign: 'center' }}>
           <div style={{
@@ -107,7 +108,7 @@ export default function DashboardPage() {
         display: 'flex',
         alignItems: 'center',
         justifyContent: 'center',
-        padding: 'var(--space-6)',
+        padding: 'var(--space-4)',
       }}>
         <div style={{
           background: 'var(--bg-secondary)',
@@ -115,6 +116,7 @@ export default function DashboardPage() {
           borderRadius: 'var(--radius-md)',
           padding: 'var(--space-6)',
           maxWidth: '500px',
+          width: '100%',
         }}>
           <h2 style={{
             color: 'var(--accent-error)',
@@ -153,7 +155,12 @@ export default function DashboardPage() {
   }
 
   return (
-    <div style={{ minHeight: '100vh', background: 'var(--bg-primary)' }}>
+    <div style={{ 
+      minHeight: '100vh', 
+      background: 'var(--bg-primary)',
+      width: '100%',
+      overflowX: 'hidden',
+    }}>
       {/* Header */}
       <header style={{
         background: 'var(--bg-secondary)',
@@ -161,14 +168,18 @@ export default function DashboardPage() {
         position: 'sticky',
         top: 0,
         zIndex: 10,
+        width: '100%',
       }}>
         <div style={{
           padding: 'var(--space-4) var(--space-6)',
+          maxWidth: '100%',
         }}>
           <div style={{
             display: 'flex',
             alignItems: 'center',
             justifyContent: 'space-between',
+            flexWrap: 'wrap',
+            gap: 'var(--space-3)',
           }}>
             <div>
               <h1 style={{
@@ -202,15 +213,18 @@ export default function DashboardPage() {
 
       {/* Main Content */}
       <main style={{
-        padding: 'var(--space-6)',
+        padding: 'var(--space-4) var(--space-6)',
+        maxWidth: '100%',
+        width: '100%',
       }}>
         <div style={{
           display: 'flex',
           flexDirection: 'column',
           gap: 'var(--space-8)',
+          maxWidth: '100%',
         }}>
           {/* Agent Status Cards */}
-          <section>
+          <section style={{ width: '100%', maxWidth: '100%' }}>
             <div style={{
               display: 'flex',
               alignItems: 'center',
@@ -218,6 +232,8 @@ export default function DashboardPage() {
               marginBottom: 'var(--space-4)',
               paddingBottom: 'var(--space-3)',
               borderBottom: '1px solid var(--bg-border)',
+              flexWrap: 'wrap',
+              gap: 'var(--space-3)',
             }}>
               <h2 style={{
                 fontSize: 'var(--text-lg)',
@@ -242,8 +258,9 @@ export default function DashboardPage() {
             
             <div style={{
               display: 'grid',
-              gridTemplateColumns: 'repeat(auto-fit, minmax(220px, 1fr))',
+              gridTemplateColumns: 'repeat(auto-fit, minmax(min(220px, 100%), 1fr))',
               gap: 'var(--space-4)',
+              width: '100%',
             }}>
               {agentData?.agents.map((agent) => (
                 <AgentCard key={agent.id} agent={agent} />
@@ -253,13 +270,13 @@ export default function DashboardPage() {
 
           {/* Cost Summary */}
           {costData && (
-            <section>
+            <section style={{ width: '100%', maxWidth: '100%' }}>
               <CostSummary data={costData} />
             </section>
           )}
 
           {/* Recent Sessions */}
-          <section>
+          <section style={{ width: '100%', maxWidth: '100%' }}>
             <SessionsTable sessions={sessions} />
           </section>
         </div>

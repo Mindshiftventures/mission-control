@@ -308,11 +308,6 @@ export function ContextViewer({ files }: ContextViewerProps) {
                     borderRadius: '50%',
                     animation: 'spin 1s linear infinite',
                   }} />
-                  <style jsx>{`
-                    @keyframes spin {
-                      to { transform: rotate(360deg); }
-                    }
-                  `}</style>
                 </div>
               ) : (
                 <pre style={{
